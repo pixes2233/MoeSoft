@@ -1,0 +1,37 @@
+﻿<Page x:Class="NewScarAnime.UpdateInfo"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:NewScarAnime"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d" 
+      d:DesignHeight="768" d:DesignWidth="1366"
+      Title="UpdateInfo">
+
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Border Background="#80FFB6C1" CornerRadius="25" Margin="25">
+                <StackPanel Orientation="Vertical" Margin="25">
+                    <ui:TextBlock Text="1.3.0 Beta" FontSize="26" FontWeight="Bold" Margin="10"/>
+                    <ui:TextBlock Text="Added" FontSize="20" FontWeight="Bold" Margin="10"/>
+                    <ui:TextBlock Text="Added the feature to search for anime on Bangumi and add them." Margin="10"/>
+                    <ui:TextBlock Text="Added a feature to open the Bangumi website from the anime details page." Margin="10"/>
+                    <ui:TextBlock Text="UI update" Margin="10"/>
+                    <ui:TextBlock Text="Bug Fix" FontSize="20" FontWeight="Bold" Margin="10"/>
+                    <ui:TextBlock Text="None" Margin="10"/>
+                </StackPanel>
+            </Border>
+
+            <Border Background="#80FFB6C1" CornerRadius="25" Margin="25">
+                <StackPanel Orientation="Vertical" Margin="25">
+                    <ui:TextBlock Text="1.2.0 Beta" FontSize="26" FontWeight="Bold" Margin="10"/>
+                    <ui:TextBlock Text="Added" FontSize="20" FontWeight="Bold" Margin="10"/>
+                    <ui:TextBlock Text="Added the feature to open videos with PotPlayer." Margin="10"/>
+                    <ui:TextBlock Text="Bug Fix" FontSize="20" FontWeight="Bold" Margin="10"/>
+                    <ui:TextBlock Text="None" Margin="10"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,76 @@
+﻿<Page x:Class="NewScarAnime.AboutPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:NewScarAnime"
+      mc:Ignorable="d" 
+      d:DesignHeight="768" d:DesignWidth="1366"
+      Title="AboutPage">
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center" MaxWidth="700" Margin="20">
+
+                <!-- 标题区：图标 + 文本 -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
+                    <Image Source="/Icon/icon.png" Width="64" Height="64" Margin="0,0,15,0"/>
+                    <TextBlock Text="About MoeSoft"
+                       FontSize="40"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       VerticalAlignment="Center">
+                        <TextBlock.Effect>
+                            <!-- 阴影效果，防止白色文字在亮背景下看不清 -->
+                            <DropShadowEffect Color="Black" BlurRadius="4" ShadowDepth="1"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
+                <TextBlock Text="A modern anime tracker designed to organize your shows and make your viewing experience more convenient."
+                   FontSize="18"
+                   Foreground="#F0FFFFFF"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,25">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="3" ShadowDepth="1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+                <!-- 应用信息卡片 -->
+                <Border Background="#66000000" CornerRadius="12" Padding="24" Margin="0,0,0,25">
+                    <StackPanel>
+                        <TextBlock Text="Version" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="1.3.0 Beta" FontSize="16" Foreground="#F0FFFFFF" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="Author" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="radamu" FontSize="16" Foreground="#F0FFFFFF"/>
+
+                        <TextBlock Text="Target Framework" FontSize="18" FontWeight="Bold" Foreground="White" Margin="0,12,0,0"/>
+                        <TextBlock Text=".NET 8.0 (Windows x64)" FontSize="16" Foreground="#F0FFFFFF"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- 开源声明卡片 -->
+                <Border Background="#66000000" CornerRadius="12" Padding="24">
+                    <StackPanel>
+                        <TextBlock Text="Open Source Credits"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           Margin="0,0,0,12"/>
+                        <TextBlock Text="• Newtonsoft.Json © James Newton-King - MIT License" FontSize="16" Foreground="#F0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="• WPF-UI © lepoco - MIT License" FontSize="16" Foreground="#F0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="• WPF-UI.Abstractions © lepoco - MIT License" FontSize="16" Foreground="#F0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="• Microsoft-WindowsAPICodePack-Core © rpastitic, contre, dahall - Ms-PL" FontSize="16" Foreground="#F0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="• Microsoft-WindowsAPICodePack-Shell © rpastitic, contre, dahall - Ms-PL" FontSize="16" Foreground="#F0FFFFFF" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

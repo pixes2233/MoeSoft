@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewScarAnime", "NewScarAnime\NewScarAnime.csproj", "{6E9CC3B4-F883-4258-89FD-4D96F3920E59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|x64.Build.0 = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Debug|x86.Build.0 = Debug|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|ARM.Build.0 = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|ARM64.Build.0 = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|x64.ActiveCfg = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|x64.Build.0 = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|x86.ActiveCfg = Release|Any CPU
+		{6E9CC3B4-F883-4258-89FD-4D96F3920E59}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B789AE5B-7BED-4658-819D-E1E3F025B548}
+	EndGlobalSection
+EndGlobal

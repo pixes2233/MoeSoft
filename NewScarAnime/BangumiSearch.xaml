@@ -1,0 +1,71 @@
+﻿<Page x:Class="NewScarAnime.BangumiSearch"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:NewScarAnime"
+      mc:Ignorable="d" 
+      d:DesignHeight="768" d:DesignWidth="1366"
+      Title="BangumiSearch">
+
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Bangumi搜索番剧 Beta版" 
+                       FontSize="32" 
+                       FontWeight="Bold" 
+                       HorizontalAlignment="Center" 
+                       Margin="20,10,0,10"
+                       Foreground="#FFB6C1">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="4" ShadowDepth="1"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <ui:TextBlock Text="数据来源：https://bangumi.tv/ 目前该功能处于Beta测试版 搜索结果只显示第一页 点击添加后要一段时间才可生效 如出现错误请用回原版番剧添加功能" HorizontalAlignment="Center">
+            </ui:TextBlock>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ui:TextBox x:Name="AnimeName" Margin="10" Width="300" KeyDown="AnimeName_KeyDown"/>
+                <ui:Button Content="搜索" Margin="10" Click="BangumiSearchBtn">
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="Search16" FontSize="16"/>
+                    </ui:Button.Icon>
+                </ui:Button>
+            </StackPanel>
+
+            <ui:TextBlock x:Name="SearchStatus" Text="正在搜索..." HorizontalAlignment="Center" Visibility="Collapsed"/>
+
+            <ItemsControl ItemsSource="{Binding AnimeResult}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="220" CornerRadius="25" Background="#FFF0F5">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Image Height="200" VerticalAlignment="Center" Stretch="Uniform" Margin="10" CornerRadius="25">
+                                    <ui:Image.Source>
+                                        <BitmapImage UriSource="{Binding image}" CreateOptions="IgnoreImageCache" CacheOption="OnLoad"/>
+                                    </ui:Image.Source>
+
+                                    <ui:Image.Effect>
+                                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Color="White" Opacity="0.8"/>
+                                    </ui:Image.Effect>
+                                </ui:Image>
+
+                                <StackPanel Orientation="Vertical">
+                                    <ui:TextBlock Text="{Binding title}" FontSize="20" FontWeight="Bold" Margin="10" Foreground="Black" />
+                                    <ui:Button Content="添加番剧" Click="AddAnime"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</Page>
