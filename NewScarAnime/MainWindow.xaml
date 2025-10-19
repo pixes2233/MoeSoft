@@ -149,17 +149,6 @@
                             <ui:SymbolIcon Symbol="AddSquareMultiple16" FontSize="24"/>
                         </ui:NavigationViewItem.Icon>
                     </ui:NavigationViewItem>
-
-                    <ui:NavigationViewItem Tag="Update"
-                           TargetPageType="{x:Type local:UpdateInfo}"
-                           Content="更新日记"
-                           FontSize="12"
-                           Foreground="Black"
-                           Cursor="Hand">
-                        <ui:NavigationViewItem.Icon>
-                            <ui:SymbolIcon Symbol="Info16" FontSize="24"/>
-                        </ui:NavigationViewItem.Icon>
-                    </ui:NavigationViewItem>
                 </ui:NavigationView.MenuItems>
 
 

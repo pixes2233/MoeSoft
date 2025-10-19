@@ -382,9 +382,9 @@ namespace NewScarAnime
             e.Handled = true;
         }
 
-        private void UpdateAnimeInfo(object sender, RoutedEventArgs e)
+        private void UpdateAnimeInfo(object sender, MouseButtonEventArgs e)
         {
-
+            
         }
     }
 }

@@ -15,7 +15,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ui:TextBlock Grid.Row="0" Text="当前版本为Beta封闭测试版   功能、BUG反馈：1848129726@qq.com" FontWeight="Bold" HorizontalAlignment="Center" Margin="15"/>
+        <ui:Button Grid.Row="0"
+                   Width="50"
+                   Height="50"
+                   Background="Transparent"
+                   BorderBrush="Transparent"
+                   BorderThickness="0"
+                   FocusVisualStyle="{x:Null}"
+                   Focusable="False"
+                   IsTabStop="False"
+                   MouseLeftButtonUp="UpdateAnimeInfo">
+            <ui:SymbolIcon Symbol="ArrowClockwise28" FontSize="25"/>
+        </ui:Button>
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Anime}">
             <ItemsControl.ItemsPanel>
