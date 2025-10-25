@@ -26,15 +26,10 @@
             </ui:TextBlock>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ui:TextBox x:Name="AnimeName" Margin="10" Width="300" KeyDown="AnimeName_KeyDown"/>
-                <ui:Button Content="搜索" Margin="10" Click="BangumiSearchBtn">
-                    <ui:Button.Icon>
-                        <ui:SymbolIcon Symbol="Search16" FontSize="16"/>
-                    </ui:Button.Icon>
-                </ui:Button>
+                <ui:AutoSuggestBox x:Name="AnimeName" Margin="10" Width="300" KeyDown="AnimeNameSearch" PlaceholderText="输入番剧名称并回车搜索"/>
             </StackPanel>
 
-            <ui:TextBlock x:Name="SearchStatus" Text="正在搜索..." HorizontalAlignment="Center" Visibility="Collapsed"/>
+            <ui:ProgressRing x:Name="SearchStatus" IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Center"/>
 
             <ItemsControl ItemsSource="{Binding AnimeResult}" HorizontalAlignment="Center">
                 <ItemsControl.ItemsPanel>
@@ -46,8 +41,15 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="220" CornerRadius="25" Background="#FFF0F5">
-                            <StackPanel Orientation="Horizontal">
-                                <ui:Image Height="200" VerticalAlignment="Center" Stretch="Uniform" Margin="10" CornerRadius="25">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ui:Image Grid.Column="0" Height="200" VerticalAlignment="Center" Stretch="Uniform" Margin="10" CornerRadius="25">
                                     <ui:Image.Source>
                                         <BitmapImage UriSource="{Binding image}" CreateOptions="IgnoreImageCache" CacheOption="OnLoad"/>
                                     </ui:Image.Source>
@@ -56,12 +58,10 @@
                                         <DropShadowEffect BlurRadius="30" ShadowDepth="0" Color="White" Opacity="0.8"/>
                                     </ui:Image.Effect>
                                 </ui:Image>
-
-                                <StackPanel Orientation="Vertical">
-                                    <ui:TextBlock Text="{Binding title}" FontSize="20" FontWeight="Bold" Margin="10" Foreground="Black" />
-                                    <ui:Button Content="添加番剧" Click="AddAnime"/>
-                                </StackPanel>
-                            </StackPanel>
+                                
+                                <ui:TextBlock Grid.Column="1" Text="{Binding title}" FontSize="25" FontWeight="Bold" Margin="10" Foreground="Black" HorizontalAlignment="Left"/>
+                                <ui:Button Grid.Column="3" Appearance="Primary" Margin="10" Content="添加番剧" FontSize="17" Click="AddAnime" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

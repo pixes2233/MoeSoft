@@ -15,18 +15,29 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ui:Button Grid.Row="0"
-                   Width="50"
-                   Height="50"
-                   Background="Transparent"
-                   BorderBrush="Transparent"
-                   BorderThickness="0"
-                   FocusVisualStyle="{x:Null}"
-                   Focusable="False"
-                   IsTabStop="False"
-                   MouseLeftButtonUp="UpdateAnimeInfo">
-            <ui:SymbolIcon Symbol="ArrowClockwise28" FontSize="25"/>
-        </ui:Button>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ui:Button Grid.Column="0"
+                       Width="50"
+                       Height="50"
+                       Background="Transparent"
+                       BorderBrush="Transparent"
+                       BorderThickness="0"
+                       FocusVisualStyle="{x:Null}"
+                       Focusable="False"
+                       IsTabStop="False"
+                       Click="UpdateAnimeInfo">
+                <ui:SymbolIcon Symbol="ArrowClockwise28" FontSize="25"/>
+            </ui:Button>
+
+            <ProgressBar x:Name="ProgressBar" Grid.Column="1" IsIndeterminate="True" Visibility="Hidden" VerticalAlignment="Center"/>
+        </Grid>
+
+        
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Anime}">
             <ItemsControl.ItemsPanel>

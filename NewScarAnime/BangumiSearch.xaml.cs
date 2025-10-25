@@ -41,14 +41,6 @@ namespace NewScarAnime
             public string image { get; set; }
         }
 
-        private async void BangumiSearchBtn(object sender, RoutedEventArgs e)
-        {
-            AnimeResult.Clear();
-            SearchStatus.Visibility = Visibility.Visible;
-            await RunBangumiSearchScraper(AnimeName.Text);
-            SearchStatus.Visibility = Visibility.Collapsed;
-        }
-
         public async Task RunBangumiSearchScraper(string title)
         {
             // 指定要启动的exe文件路径
@@ -120,7 +112,7 @@ namespace NewScarAnime
             }
         }
 
-        private async void AnimeName_KeyDown(object sender, KeyEventArgs e)
+        private async void AnimeNameSearch(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

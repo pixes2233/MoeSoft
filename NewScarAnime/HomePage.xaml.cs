@@ -32,6 +32,7 @@ namespace NewScarAnime
     /// </summary>
     public partial class HomePage : Page
     {
+        private static Visibility _progressBarState = Visibility.Hidden;
         public ObservableCollection<AnimeItem> Anime { get; set; }
         public HomePage()
         {
@@ -39,6 +40,7 @@ namespace NewScarAnime
             this.DataContext = this;
             Anime = new ObservableCollection<AnimeItem>();
             LoadItems();
+            ProgressBar.Visibility = _progressBarState;
         }
 
         public class AnimeItem
@@ -50,6 +52,10 @@ namespace NewScarAnime
 
         private static string GetLocalAddress()
         {
+            ///<summary>
+            ///返回用户本地应用程序数据文件夹路径
+            /// </summary>
+
             // 获取本地应用程序数据文件夹路径
             string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
@@ -59,8 +65,14 @@ namespace NewScarAnime
             return appSpecificFolder;
         }
 
+
+
         private void LoadItems()
         {
+            ///<summary>
+            ///载入所有AnimeInfo数据并显示在首页
+            /// </summary>
+
             Anime.Clear();
             foreach (var info in LoadAllAnimeInfo())
             {
@@ -116,6 +128,7 @@ namespace NewScarAnime
             /// <summary>
             /// 一次性返回所有的AnimeInfo数据
             /// </summary>
+            
             var animeList = new List<AnimeInfo>();
             string folderPath = System.IO.Path.Combine(GetLocalAddress(), "AnimeInfo");
 
@@ -248,6 +261,10 @@ namespace NewScarAnime
 
         public static async Task RunBangumiScraper(string url)
         {
+            ///<summary>
+            ///启动爬虫程序
+            /// </summary>
+
             // 指定要启动的exe文件路径
             var exePath = System.IO.Path.Combine(AppContext.BaseDirectory, "Scrap", "BangumiScraper.exe");
 
@@ -382,9 +399,35 @@ namespace NewScarAnime
             e.Handled = true;
         }
 
-        private void UpdateAnimeInfo(object sender, MouseButtonEventArgs e)
+        private async void UpdateAnimeInfo(object sender, RoutedEventArgs e)
         {
-            
+            ///<summary>
+            ///更新所有AnimeInfo数据
+            /// </summary>
+            _progressBarState = Visibility.Visible;
+            ProgressBar.Visibility = _progressBarState;
+            var infos = LoadAllAnimeInfo();
+            var tasks = new List<Task>();
+            using var sem = new SemaphoreSlim(4); // 最多并发4个
+            foreach (var info in infos)
+            {
+                await sem.WaitAsync();
+                tasks.Add(Task.Run(async () =>
+                {
+                    try
+                    {
+                        await RunBangumiScraper(info.bangumi_url);
+                    }
+                    finally
+                    {
+                        sem.Release();
+                    }
+                }));
+            }
+            await Task.WhenAll(tasks);
+
+            _progressBarState = Visibility.Hidden;
+            ProgressBar.Visibility = _progressBarState;
         }
     }
 }
