@@ -60,7 +60,8 @@
                                 </ui:Image>
                                 
                                 <ui:TextBlock Grid.Column="1" Text="{Binding title}" FontSize="25" FontWeight="Bold" Margin="10" Foreground="Black" HorizontalAlignment="Left"/>
-                                <ui:Button Grid.Column="3" Appearance="Primary" Margin="10" Content="添加番剧" FontSize="17" Click="AddAnime" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                                <ui:Button Grid.Column="3" Margin="10" Content="添加番剧" FontSize="17" Click="AddAnime" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                           Background="#FF1493" Foreground="White" BorderBrush="Transparent" CornerRadius="15"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

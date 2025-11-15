@@ -7,7 +7,8 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="MoeSoft" Height="768" Width="1366"
-        ExtendsContentIntoTitleBar="True">
+        ExtendsContentIntoTitleBar="True"
+        Background="Transparent">
 
     <!-- 资源：配色与样式 -->
     <ui:FluentWindow.Resources>
@@ -120,7 +121,7 @@
         <Grid Margin="0,36,0,0">
             <!-- 导航栏 -->
             <ui:NavigationView x:Name="RootNavigation"
-                               OpenPaneLength="75"
+                               OpenPaneLength="60"
                                PaneDisplayMode="LeftFluent"
                                IsBackButtonVisible="Collapsed"
                                IsPaneOpen="False"
