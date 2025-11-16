@@ -12,16 +12,21 @@
 
     <!-- 资源：配色与样式 -->
     <ui:FluentWindow.Resources>
-        <LinearGradientBrush x:Key="TitleBarBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FF1E1E2A" Offset="0.0"/>
-            <GradientStop Color="#FF111014" Offset="1.0"/>
+        <!-- 现代化标题栏：主为深色，带一点柔和的紫色点缀作现代感强调 -->
+        <LinearGradientBrush x:Key="TitleBarBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF0E0F11" Offset="0.0"/>
+            <GradientStop Color="#FF2B1330" Offset="0.55"/>
+            <GradientStop Color="#FF0E0F11" Offset="1.0"/>
         </LinearGradientBrush>
 
-        <SolidColorBrush x:Key="TitleTextBrush" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="TitleTextBrush" Color="#FFF3F4F6"/>
         <ImageBrush x:Key="TitleIconBrush" ImageSource="/Icon/icon.png"/>
-        <SolidColorBrush x:Key="ButtonHoverBrush" Color="#33FFFFFF"/>
-        <SolidColorBrush x:Key="CloseButtonHoverBrush" Color="#33FF5252"/>
+        <!-- 悬停色保持低对比、带一点透光感，和标题栏配色协调 -->
+        <SolidColorBrush x:Key="ButtonHoverBrush" Color="#22FFFFFF"/>
+        <!-- 关闭按钮的更突出红色悬停 -->
+        <SolidColorBrush x:Key="CloseButtonHoverBrush" Color="#44FF5252"/>
 
+        <!-- 标题栏按钮：带投影效果（移除直接缩放以避免 XAML Setter 限制） -->
         <Style x:Key="TitleBarButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="28"/>
@@ -36,16 +41,28 @@
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="bd"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="4"
-                                BorderThickness="0">
+                                CornerRadius="6"
+                                BorderThickness="0"
+                                Padding="2">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="{StaticResource ButtonHoverBrush}"/>
+                                <Setter TargetName="bd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#22000000" BlurRadius="10" ShadowDepth="3"/>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="bd" Property="Opacity" Value="0.8"/>
+                                <Setter TargetName="bd" Property="Opacity" Value="0.88"/>
+                                <Setter TargetName="bd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#18000000" BlurRadius="6" ShadowDepth="1"/>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -53,6 +70,7 @@
             </Setter>
         </Style>
 
+        <!-- 关闭按钮：基于 TitleBarButtonStyle，但悬停更红并更明显 -->
         <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource TitleBarButtonStyle}">
             <Setter Property="Foreground" Value="#FFF2F2F2"/>
             <Setter Property="Template">
@@ -60,16 +78,29 @@
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="bd"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="4"
-                                BorderThickness="0">
+                                CornerRadius="6"
+                                BorderThickness="0"
+                                Padding="2">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="{StaticResource CloseButtonHoverBrush}"/>
+                                <Setter TargetName="bd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#33FF5252" BlurRadius="12" ShadowDepth="2"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="bd" Property="Opacity" Value="0.98"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="bd" Property="Opacity" Value="0.9"/>
+                                <Setter TargetName="bd" Property="Opacity" Value="0.92"/>
+                                <Setter TargetName="bd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#22FF5252" BlurRadius="6" ShadowDepth="1"/>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -77,11 +108,17 @@
             </Setter>
         </Style>
 
+        <!-- 标题文本：添加轻微阴影与更圆润的视觉 -->
         <Style TargetType="TextBlock" x:Key="TitleTextStyle">
             <Setter Property="Foreground" Value="{StaticResource TitleTextBrush}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#22000000" BlurRadius="6" ShadowDepth="1"/>
+                </Setter.Value>
+            </Setter>
         </Style>
     </ui:FluentWindow.Resources>
 
@@ -90,7 +127,11 @@
         <DockPanel VerticalAlignment="Top" Height="36" Background="{StaticResource TitleBarBrush}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <!-- 左侧应用 Logo + 名称（也是拖动区域的一部分） -->
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="10,0,0,0" VerticalAlignment="Center">
-                <Ellipse Width="28" Height="28" Fill="{StaticResource TitleIconBrush}" Margin="0,0,8,0"/>
+                <Ellipse Width="28" Height="28" Fill="{StaticResource TitleIconBrush}" Margin="0,0,8,0">
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="#22000000" BlurRadius="8" ShadowDepth="1"/>
+                    </Ellipse.Effect>
+                </Ellipse>
                 <TextBlock Text="MoeSoft" Style="{StaticResource TitleTextStyle}" VerticalAlignment="Center"/>
             </StackPanel>
 
@@ -121,7 +162,6 @@
         <Grid Margin="0,36,0,0">
             <!-- 导航栏 -->
             <ui:NavigationView x:Name="RootNavigation"
-                               OpenPaneLength="60"
                                PaneDisplayMode="LeftFluent"
                                IsBackButtonVisible="Collapsed"
                                IsPaneOpen="False"

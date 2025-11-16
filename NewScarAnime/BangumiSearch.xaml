@@ -22,7 +22,7 @@
                 </TextBlock.Effect>
             </TextBlock>
 
-            <ui:TextBlock Text="数据来源：https://bangumi.tv/ 目前该功能处于Beta测试版 搜索结果只显示第一页 点击添加后要一段时间才可生效 如出现错误请用回原版番剧添加功能" HorizontalAlignment="Center">
+            <ui:TextBlock Text="数据来源:https://bangumi.tv/ 目前该功能处于Beta测试版 搜索结果只显示第一页 点击添加后要一段时间才可生效" HorizontalAlignment="Center">
             </ui:TextBlock>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -40,28 +40,27 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="220" CornerRadius="25" Background="#FFF0F5">
+                        <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="300" CornerRadius="25" Background="#FFDBE5">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <ui:Image Grid.Column="0" Height="200" VerticalAlignment="Center" Stretch="Uniform" Margin="10" CornerRadius="25">
+                                <ui:Image Grid.Column="0" Height="260" VerticalAlignment="Center" Stretch="Uniform" Margin="20" CornerRadius="25">
                                     <ui:Image.Source>
                                         <BitmapImage UriSource="{Binding image}" CreateOptions="IgnoreImageCache" CacheOption="OnLoad"/>
                                     </ui:Image.Source>
 
                                     <ui:Image.Effect>
-                                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Color="White" Opacity="0.8"/>
+                                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Color="Black" Opacity="0.8"/>
                                     </ui:Image.Effect>
                                 </ui:Image>
-                                
-                                <ui:TextBlock Grid.Column="1" Text="{Binding title}" FontSize="25" FontWeight="Bold" Margin="10" Foreground="Black" HorizontalAlignment="Left"/>
-                                <ui:Button Grid.Column="3" Margin="10" Content="添加番剧" FontSize="17" Click="AddAnime" VerticalAlignment="Top" HorizontalAlignment="Right"
-                                           Background="#FF1493" Foreground="White" BorderBrush="Transparent" CornerRadius="15"/>
+                                <StackPanel Grid.Column="1" Orientation="Vertical">
+                                    <ui:TextBlock Text="{Binding title}" FontSize="25" FontWeight="Bold" Margin="10" Foreground="Black" HorizontalAlignment="Left"/>
+                                    <ui:Button Margin="10" Content="添加番剧" Appearance="Primary" FontSize="14" Click="AddAnime" VerticalAlignment="Top" BorderBrush="Transparent" CornerRadius="15"/>
+                                    <ui:Button Margin="10" Content="打开链接" Appearance="Primary" FontSize="14" Click="OpenLink" VerticalAlignment="Top" BorderBrush="Transparent" CornerRadius="15"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>

@@ -132,5 +132,18 @@ namespace NewScarAnime
             }
         }
 
+        private async void OpenLink(object sender, RoutedEventArgs e)
+        {
+            var animeItem = (sender as Wpf.Ui.Controls.Button)?.DataContext as BangumiSearchResult;
+            if (animeItem != null)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = animeItem.link,
+                    UseShellExecute = true
+                });
+            }
+        }
+
     }
 }

@@ -15,9 +15,9 @@
 
                 <!-- 标题区：图标 + 文本 -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
-                    <Image Source="/Icon/icon.png" Width="64" Height="64" Margin="0,0,15,0"/>
+                    <Image Source="/Icon/icon.png" Width="100" Height="100" Margin="0,0,15,0"/>
                     <TextBlock Text="About MoeSoft"
-                       FontSize="40"
+                       FontSize="60"
                        FontWeight="Bold"
                        Foreground="White"
                        VerticalAlignment="Center">
