@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static NewScarAnime.BangumiSearch;
+using static NewScarAnime.HomePage;
 
 namespace NewScarAnime
 {
@@ -20,14 +22,36 @@ namespace NewScarAnime
     /// </summary>
     public partial class SearchStatus : Page
     {
-        public SearchStatus(bool status)
+        public SearchStatus(string link)
         {
             InitializeComponent();
-            if(status == false)
+            AddAnime(link);
+        }
+
+        private async void AddAnime(string link)
+        {
+            var mainWindow = Application.Current?.MainWindow as Window;
+
+            try
             {
-                StatusText.Text = "搜索完成！";
-                Status.Visibility = Visibility.Hidden;
+                // 禁用主窗口，阻止用户交互
+                mainWindow.IsEnabled = false;
+
+                // 等待爬虫完成（异步，不阻塞 UI 线程）
+                await HomePage.RunBangumiScraper(link);
+
+                mainWindow.IsEnabled = true;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                mainWindow.IsEnabled = true;
+            }
+            StatusText.Text = "操作完成！请返回首页查看结果。";
+            Status.Visibility = Visibility.Hidden;
         }
     }
 }

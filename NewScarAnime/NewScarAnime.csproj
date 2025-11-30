@@ -16,6 +16,7 @@
     <None Remove="Icon\anime_girl_icon.ico" />
     <None Remove="Icon\DontFindImage.png" />
     <None Remove="Icon\icon.png" />
+    <None Remove="Icon\icon1.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +43,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Icon\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icon\icon1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
