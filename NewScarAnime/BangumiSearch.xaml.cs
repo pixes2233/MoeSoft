@@ -125,10 +125,33 @@ namespace NewScarAnime
 
         private async void AddAnime(object sender, RoutedEventArgs e)
         {
-            var animeItem = (sender as Wpf.Ui.Controls.Button)?.DataContext as BangumiSearchResult;
-            if (animeItem != null)
+            if (!(sender is Wpf.Ui.Controls.Button btn) || !(btn.DataContext is BangumiSearchResult animeItem))
+                return;
+
+            var mainWindow = Application.Current?.MainWindow as Window;
+
+            try
             {
+                // 禁用主窗口，阻止用户交互
+                if (mainWindow != null) mainWindow.IsEnabled = false;
+
+                // 导航到进度/状态页面（导航是同步返回的）
+                this.NavigationService.Content = new SearchStatus(true);
+
+                // 等待爬虫完成（异步，不阻塞 UI 线程）
                 await HomePage.RunBangumiScraper(animeItem.link);
+
+                this.NavigationService.Content = new SearchStatus(false);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                // 恢复主窗口交互
+                if (mainWindow != null) mainWindow.IsEnabled = true;
             }
         }
 
