@@ -9,32 +9,37 @@
       d:DesignHeight="768" d:DesignWidth="1366"
       Title="AboutPage">
 
+    <!-- 统一资源：保持原主题，增强层次与细节 -->
     <Page.Resources>
-        <!-- 统一配色和字号，便于后续调整（改为浅色主题） -->
         <LinearGradientBrush x:Key="PageBackground" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Color="#FFFAFBFF" Offset="0.0"/>
-            <GradientStop Color="#FFF0F4F8" Offset="1.0"/>
+            <GradientStop Color="#FFEFF3F7" Offset="1.0"/>
         </LinearGradientBrush>
 
-        <SolidColorBrush x:Key="CardBackground" Color="#CCFFFFFF"/>
-        <SolidColorBrush x:Key="CardOverlay" Color="#0F000000"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#EFFFFFFF"/>
         <SolidColorBrush x:Key="PrimaryText" Color="#1B1B1B"/>
+        <SolidColorBrush x:Key="SecondaryText" Color="#555555"/>
+        <SolidColorBrush x:Key="Accent" Color="#FF6AA9FF"/>
+
+        <DropShadowEffect x:Key="SoftShadow" Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.14"/>
+
         <Style x:Key="SectionHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryText}"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
         </Style>
+
         <Style x:Key="BodyText" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Foreground" Value="#222222"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="{StaticResource SecondaryText}"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="22"/>
         </Style>
-        <DropShadowEffect x:Key="CardShadow" Color="#000000" BlurRadius="8" ShadowDepth="1" Opacity="0.12"/>
     </Page.Resources>
 
     <Grid Background="{StaticResource PageBackground}">
-
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="28">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -42,100 +47,101 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- 中央容器：限制宽度并在大屏幕上居中 -->
-                <StackPanel Grid.Column="1" Width="700" HorizontalAlignment="Center" Margin="0,8,0,8">
+                <!-- 中央内容容器 -->
+                <StackPanel Grid.Column="1" Width="720" HorizontalAlignment="Center">
 
-                    <!-- 标题区：圆角图标 + 文本（图标添加阴影、圆角） -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,18">
-                        <Border Width="100" Height="100" CornerRadius="18" Background="#10CCCCCC" 
-                                VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                Effect="{StaticResource CardShadow}">
-                            <Image Source="/Icon/icon.png" Stretch="UniformToFill" Margin="8" />
-                        </Border>
+                    <!-- 顶部标题区 -->
+                    <Border CornerRadius="20" Padding="22" Margin="0,0,0,22"
+                            Background="{StaticResource CardBackground}"
+                            Effect="{StaticResource SoftShadow}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
-                            <TextBlock Text="About MoeSoft"
-                                       FontSize="56"
-                                       FontWeight="Bold"
-                                       Foreground="{StaticResource PrimaryText}"
-                                       VerticalAlignment="Center">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect Color="#000000" BlurRadius="4" ShadowDepth="1" Opacity="0.25"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
+                            <!-- App 图标 -->
+                            <Border Width="92" Height="92" CornerRadius="18"
+                                    Background="#14000000" Grid.Column="0">
+                                <Image Source="/Icon/icon.png" Stretch="Uniform" Margin="12"/>
+                            </Border>
 
-                            <TextBlock Text="A modern anime tracker designed to organize your shows and make your viewing experience more convenient."
-                                       Style="{StaticResource BodyText}"
-                                       FontSize="14"
-                                       Margin="0,6,0,0"
-                                       TextAlignment="Left"
-                                       Width="520">
-                                <TextBlock.Effect>
-                                    <DropShadowEffect Color="#000000" BlurRadius="3" ShadowDepth="1" Opacity="0.12"/>
-                                </TextBlock.Effect>
-                            </TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <!-- 信息卡片：浅色卡片，保留层次感 -->
-                    <Border Background="{StaticResource CardBackground}" CornerRadius="12" Padding="20" Margin="0,0,0,18" Effect="{StaticResource CardShadow}">
-                        <StackPanel>
-                            <TextBlock Text="Version" Style="{StaticResource SectionHeader}"/>
-                            <TextBlock Text="1.4.3 Beta" Style="{StaticResource BodyText}" Margin="0,4,0,10"/>
-
-                            <Separator Margin="0,6" Opacity="0.12"/>
-
-                            <TextBlock Text="Author" Style="{StaticResource SectionHeader}" Margin="0,6,0,0"/>
-                            <TextBlock Text="radamu" Style="{StaticResource BodyText}" Margin="0,4,0,10"/>
-
-                            <Separator Margin="0,6" Opacity="0.12"/>
-
-                            <TextBlock Text="Target Framework" Style="{StaticResource SectionHeader}" Margin="0,6,0,0"/>
-                            <TextBlock Text=".NET 8.0 (Windows x64)" Style="{StaticResource BodyText}" Margin="0,4,0,0"/>
-                        </StackPanel>
+                            <!-- 标题文字 -->
+                            <StackPanel Grid.Column="1" Margin="20,4,0,0">
+                                <TextBlock Text="About MoeSoft"
+                                           FontSize="40"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource PrimaryText}"/>
+                                <TextBlock Text="A modern anime tracker designed to organize your shows and make your viewing experience more convenient."
+                                           Style="{StaticResource BodyText}"/>
+                            </StackPanel>
+                        </Grid>
                     </Border>
 
-                    <!-- 开源声明卡片：浅色风格 -->
-                    <Border Background="{StaticResource CardBackground}" CornerRadius="12" Padding="20" Effect="{StaticResource CardShadow}">
-                        <StackPanel>
-                            <TextBlock Text="Open Source Credits"
-                                       Style="{StaticResource SectionHeader}"
-                                       Margin="0,0,0,12"/>
+                    <!-- 基本信息卡片 -->
+                    <Border Background="{StaticResource CardBackground}" CornerRadius="14"
+                            Padding="22" Margin="0,0,0,18"
+                            Effect="{StaticResource SoftShadow}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                            <!-- 每一行使用 StackPanel 结合小圆点保持原文不变 -->
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,2">
-                                <Ellipse Width="6" Height="6" Fill="#888888" VerticalAlignment="Center" Margin="0,6,8,0"/>
-                                <TextBlock Text="• Newtonsoft.Json © James Newton-King - MIT License" Style="{StaticResource BodyText}"/>
+                            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock Text="Version" Style="{StaticResource SectionHeader}"/>
+                                <TextBlock Text="1.4.3 Beta" Style="{StaticResource BodyText}"/>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,2">
-                                <Ellipse Width="6" Height="6" Fill="#888888" VerticalAlignment="Center" Margin="0,6,8,0"/>
-                                <TextBlock Text="• WPF-UI © lepoco - MIT License" Style="{StaticResource BodyText}"/>
-                            </StackPanel>
+                            <Separator Grid.Row="1" Margin="0,6" Opacity="0.15"/>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,2">
-                                <Ellipse Width="6" Height="6" Fill="#888888" VerticalAlignment="Center" Margin="0,6,8,0"/>
-                                <TextBlock Text="• WPF-UI.Abstractions © lepoco - MIT License" Style="{StaticResource BodyText}"/>
-                            </StackPanel>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,2">
-                                <Ellipse Width="6" Height="6" Fill="#888888" VerticalAlignment="Center" Margin="0,6,8,0"/>
-                                <TextBlock Text="• Microsoft-WindowsAPICodePack-Core © rpastitic, contre, dahall - Ms-PL" Style="{StaticResource BodyText}"/>
-                            </StackPanel>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Author" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text="RADAMU" Style="{StaticResource BodyText}"/>
+                                </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <Ellipse Width="6" Height="6" Fill="#888888" VerticalAlignment="Center" Margin="0,6,8,0"/>
-                                <TextBlock Text="• Microsoft-WindowsAPICodePack-Shell © rpastitic, contre, dahall - Ms-PL" Style="{StaticResource BodyText}"/>
-                            </StackPanel>
-                        </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="Target Framework" Style="{StaticResource SectionHeader}"/>
+                                    <TextBlock Text=".NET 8.0 (Windows x64)" Style="{StaticResource BodyText}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
                     </Border>
 
+                    <!-- 开源组件卡片 -->
+                    <Border Background="{StaticResource CardBackground}" CornerRadius="14"
+                            Padding="22"
+                            Effect="{StaticResource SoftShadow}">
+                        <StackPanel>
+                            <TextBlock Text="Open Source Credits" Style="{StaticResource SectionHeader}" Margin="0,0,0,14"/>
+
+                            <ItemsControl>
+                                <ItemsControl.Items>
+                                    <sys:String xmlns:sys="clr-namespace:System;assembly=mscorlib">Newtonsoft.Json © James Newton-King — MIT License</sys:String>
+                                    <sys:String xmlns:sys="clr-namespace:System;assembly=mscorlib">WPF-UI © lepoco — MIT License</sys:String>
+                                    <sys:String xmlns:sys="clr-namespace:System;assembly=mscorlib">WPF-UI.Abstractions © lepoco — MIT License</sys:String>
+                                    <sys:String xmlns:sys="clr-namespace:System;assembly=mscorlib">Microsoft-WindowsAPICodePack-Core — Ms-PL</sys:String>
+                                    <sys:String xmlns:sys="clr-namespace:System;assembly=mscorlib">Microsoft-WindowsAPICodePack-Shell — Ms-PL</sys:String>
+                                </ItemsControl.Items>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Margin="0,6,0,0">
+                                            <Ellipse Width="6" Height="6" Fill="{StaticResource Accent}" Margin="0,8,10,0"/>
+                                            <TextBlock Text="{Binding}" Style="{StaticResource BodyText}"/>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-
-                <!-- 左右占位以保证居中显示（在窄窗口上自动消失） -->
-                <Border Grid.Column="0" Background="Transparent"/>
-                <Border Grid.Column="2" Background="Transparent"/>
-
             </Grid>
         </ScrollViewer>
     </Grid>

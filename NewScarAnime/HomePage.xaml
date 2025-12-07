@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ui:Button Grid.Column="0"
+            <ui:Button Grid.Column="1"
                        Width="50"
                        Height="50"
                        Background="Transparent"
@@ -30,7 +30,8 @@
                        FocusVisualStyle="{x:Null}"
                        Focusable="False"
                        IsTabStop="False"
-                       Click="UpdateAnimeInfo">
+                       Click="UpdateAnimeInfo"
+                       HorizontalAlignment="Right">
                 <ui:SymbolIcon Symbol="ArrowClockwise28" FontSize="25"/>
             </ui:Button>
 
