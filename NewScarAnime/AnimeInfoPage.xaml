@@ -94,7 +94,7 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding AnimeDetails.Title}" FontSize="36" FontWeight="Bold" Margin="10,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding AnimeDetails.TitleCN}" FontSize="18" FontWeight="Bold" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                 <Border Grid.Row="2" Grid.Column="0" CornerRadius="25" Margin="10">
-                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <TextBlock Text="{Binding AnimeDetails.Summary}" FontSize="15" TextWrapping="Wrap" Foreground="Gray"/>
                     </ScrollViewer>
                 </Border>
