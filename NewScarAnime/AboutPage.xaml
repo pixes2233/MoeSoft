@@ -16,7 +16,7 @@
             <GradientStop Color="#FFEFF3F7" Offset="1.0"/>
         </LinearGradientBrush>
 
-        <SolidColorBrush x:Key="CardBackground" Color="#EFFFFFFF"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#80FFFFFF"/>
         <SolidColorBrush x:Key="PrimaryText" Color="#1B1B1B"/>
         <SolidColorBrush x:Key="SecondaryText" Color="#555555"/>
         <SolidColorBrush x:Key="Accent" Color="#FF6AA9FF"/>
@@ -38,7 +38,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="{StaticResource PageBackground}">
+    <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="28">
             <Grid>
                 <Grid.ColumnDefinitions>

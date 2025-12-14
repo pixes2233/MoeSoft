@@ -28,6 +28,14 @@ namespace NewScarAnime
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
+            Loaded += (_, _) =>
+            {
+                // 兜底：确保 Mica 生效
+                WindowBackdrop.ApplyBackdrop(this, WindowBackdropType.Mica);
+
+                // 跟随系统深浅色
+                ApplicationThemeManager.ApplySystemTheme();
+            };
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)

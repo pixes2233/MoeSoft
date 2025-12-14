@@ -25,8 +25,9 @@
             <ui:TextBlock Text="数据来源:https://bangumi.tv/ 目前该功能处于Beta测试版 搜索结果只显示第一页 点击添加后要一段时间才可生效" HorizontalAlignment="Center">
             </ui:TextBlock>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                 <ui:AutoSuggestBox x:Name="AnimeName" Margin="10" Width="300" KeyDown="AnimeNameSearch" PlaceholderText="输入番剧名称并回车搜索"/>
+                <ui:TextBlock x:Name="SearchResultCount" Text="遇到错误惹(￣﹏￣；)" Margin="10" VerticalAlignment="Center" Visibility="Hidden"/>
             </StackPanel>
 
             <ui:ProgressRing x:Name="SearchStatus" IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Center"/>
@@ -40,7 +41,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="300" CornerRadius="25" Background="#FFDBE5">
+                        <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="300" CornerRadius="25" Background="#80FFDBE5">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>

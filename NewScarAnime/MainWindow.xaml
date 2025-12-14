@@ -8,15 +8,16 @@
         mc:Ignorable="d"
         Title="MoeSoft" Height="768" Width="1366"
         ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Acrylic"
         Background="Transparent">
 
     <!-- 资源：配色与样式 -->
     <ui:FluentWindow.Resources>
         <!-- 现代化标题栏：主为深色，带一点柔和的紫色点缀作现代感强调 -->
         <LinearGradientBrush x:Key="TitleBarBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#FF0E0F11" Offset="0.0"/>
-            <GradientStop Color="#FF2B1330" Offset="0.55"/>
-            <GradientStop Color="#FF0E0F11" Offset="1.0"/>
+            <GradientStop Color="#CC0E0F11" Offset="0.0"/>
+            <GradientStop Color="#CC2B1330" Offset="0.55"/>
+            <GradientStop Color="#CC0E0F11" Offset="1.0"/>
         </LinearGradientBrush>
 
         <SolidColorBrush x:Key="TitleTextBrush" Color="#FFF3F4F6"/>
@@ -123,40 +124,99 @@
     </ui:FluentWindow.Resources>
 
     <Grid>
-        <!-- 自定义标题栏 -->
-        <DockPanel VerticalAlignment="Top" Height="36" Background="{StaticResource TitleBarBrush}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-            <!-- 左侧应用 Logo + 名称（也是拖动区域的一部分） -->
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="10,0,0,0" VerticalAlignment="Center">
-                <Ellipse Width="28" Height="28" Fill="{StaticResource TitleIconBrush}" Margin="0,0,8,0">
-                    <Ellipse.Effect>
-                        <DropShadowEffect Color="#22000000" BlurRadius="8" ShadowDepth="1"/>
-                    </Ellipse.Effect>
-                </Ellipse>
-                <TextBlock Text="MoeSoft" Style="{StaticResource TitleTextStyle}" VerticalAlignment="Center"/>
+        <!-- ================= 标题栏 ================= -->
+        <Grid Height="36"
+      VerticalAlignment="Top"
+      Background="Transparent"
+      MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+
+            <!-- 背景层 -->
+            <Border Background="#AA0E0F11"
+            BorderBrush="#22FFFFFF"
+            BorderThickness="0,0,0,1"
+            IsHitTestVisible="False">
+
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="12"
+                              ShadowDepth="0"
+                              Color="#22000000"/>
+                </Border.Effect>
+            </Border>
+
+            <!-- 左侧：Logo + 标题 -->
+            <StackPanel Orientation="Horizontal"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                IsHitTestVisible="False">
+
+                <Border Width="22"
+                Height="22"
+                CornerRadius="6"
+                Background="#FF8B5CF6">
+
+                    <Image Source="/Icon/icon.png"
+                   Stretch="Uniform"
+                   Margin="3"/>
+                </Border>
+
+                <TextBlock Text="MoeSoft"
+                   Margin="8,0,0,0"
+                   FontSize="13"
+                   FontWeight="SemiBold"
+                   Foreground="#FFF3F4F6"
+                   VerticalAlignment="Center"/>
             </StackPanel>
 
-            <!-- 右侧窗口控制按钮 -->
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,6,0">
+            <!-- 右侧：窗口控制按钮 -->
+            <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Margin="0,0,4,0"
+                VerticalAlignment="Center">
+
                 <!-- 最小化 -->
-                <Button Style="{StaticResource TitleBarButtonStyle}" Click="Minimize_Click" ToolTip="最小化" >
-                    <TextBlock Text="—" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Button Click="Minimize_Click"
+                Width="32"
+                Height="32"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand">
+                    <TextBlock Text="—"
+                       FontSize="14"
+                       Foreground="#FFCCCCCC"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
                 </Button>
 
-                <!-- 最大化/还原 -->
-                <Button Style="{StaticResource TitleBarButtonStyle}" Click="Maximize_Click" ToolTip="最大化/还原">
-                    <TextBlock Text="⬜" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <!-- 最大化 -->
+                <Button Click="Maximize_Click"
+                Width="32"
+                Height="32"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand">
+                    <TextBlock Text="□"
+                       FontSize="12"
+                       Foreground="#FFCCCCCC"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
                 </Button>
 
                 <!-- 关闭 -->
-                <Button Style="{StaticResource CloseButtonStyle}" Click="Close_Click" ToolTip="关闭">
-                    <TextBlock Text="✕" FontSize="14" FontWeight="Bold" Foreground="#FFFF5C5C" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Button Click="Close_Click"
+                Width="32"
+                Height="32"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand">
+                    <TextBlock Text="✕"
+                       FontSize="13"
+                       Foreground="#FFDD5555"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
                 </Button>
             </StackPanel>
+        </Grid>
 
-            <!-- 可拖动的占位（在 DockPanel 中间，便于拖动窗口） -->
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="8,0,0,0">
-            </Grid>
-        </DockPanel>
 
         <!-- 主内容区域 -->
         <Grid Margin="0,36,0,0">
@@ -165,8 +225,9 @@
                                PaneDisplayMode="LeftFluent"
                                IsBackButtonVisible="Collapsed"
                                IsPaneOpen="False"
-                               Background="{DynamicResource AcrylicBrushDark}"
-                               Margin="5" Cursor="">
+                               Background="Transparent"
+                               Margin="8"
+                               Cursor="">
 
                 <ui:NavigationView.MenuItems>
                     <ui:NavigationViewItem Tag="Home" 

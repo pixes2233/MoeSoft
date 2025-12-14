@@ -30,8 +30,8 @@ namespace NewScarAnime
         public BangumiSearch()
         {
             InitializeComponent();
-            this.DataContext = this;
             AnimeResult = new ObservableCollection<BangumiSearchResult>();
+            this.DataContext = this;
         }
 
         public class BangumiSearchResult
@@ -82,7 +82,7 @@ namespace NewScarAnime
                         string output = await outputReadTask; // 等待输出读取完成
                         string error = (await errorReadTask).Trim(); // 等待错误读取完成并 Trim
 
-                        if (!string.IsNullOrWhiteSpace(output))
+                        if (!string.IsNullOrWhiteSpace(output) && error=="Done")
                         {
                             var results = JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
 
@@ -100,6 +100,11 @@ namespace NewScarAnime
                                     image = item.image
                                 });
                             }
+                        }
+                        else
+                        {
+                            SearchResultCount.Visibility = Visibility.Visible;
+                            SearchResultCount.Text = $"遇到错误惹(￣﹏￣；)：\n{error}";
                         }
                     }
 
