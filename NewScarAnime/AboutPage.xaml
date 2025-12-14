@@ -91,7 +91,7 @@
 
                             <StackPanel Grid.Row="0" Margin="0,0,0,10">
                                 <TextBlock Text="Version" Style="{StaticResource SectionHeader}"/>
-                                <TextBlock Text="1.4.3 Beta" Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="1.4.4 Beta" Style="{StaticResource BodyText}"/>
                             </StackPanel>
 
                             <Separator Grid.Row="1" Margin="0,6" Opacity="0.15"/>
