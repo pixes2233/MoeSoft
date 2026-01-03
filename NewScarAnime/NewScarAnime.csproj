@@ -51,10 +51,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Scrap\BangumiScraper.exe">
+    <None Update="Scrap\BangumiSearchScrap.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Scrap\BangumiSearchScrap.exe">
+    <None Update="Scrap\BangumiScraper.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
