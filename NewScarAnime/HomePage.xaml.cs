@@ -158,17 +158,82 @@ namespace NewScarAnime
                 {
                     DateOnly today = DateOnly.FromDateTime(DateTime.Today);
                     var animeItem = Anime[i];
-                    int animeQuarter = (animeItem.StartDate.Month - 1) / 3 + 1;
-                    int todayQuarter = (today.Month - 1) / 3 + 1;
-                    int animeYear = animeItem.StartDate.Year;
-                    int todayYear = today.Year;
-                    if ((animeQuarter == todayQuarter) && (animeYear == todayYear))
+                    var season = GetAnimeSeason(animeItem.StartDate);
+
+                    if (IsCurrentSeason(animeItem.StartDate))
                     {
                         Anime[i].IsCurrentSeason = true;
                         Anime.Move(i, 0);
                     }
                 }
             }
+        }
+
+        public static bool IsCurrentSeason(DateOnly animeDate, int bufferDays = 7)
+        {
+            ///<summary>
+            ///判断是否是本季度番剧
+            ///</summary>
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            var animeSeason = GetAnimeSeason(animeDate, bufferDays);
+            var currentSeason = GetAnimeSeason(today, bufferDays);
+
+            return animeSeason.Year == currentSeason.Year && animeSeason.Quarter == currentSeason.Quarter;
+        }
+
+        public static (int Year, int Quarter) GetAnimeSeason(DateOnly date, int bufferDays = 7)
+        {
+            ///<summary>
+            ///判断是否是本季度番剧の主逻辑
+            ///</summary>
+
+            // 季度起始月
+            int[] quarterStartMonths = { 1, 4, 7, 10 };
+
+            for (int i = 0; i < quarterStartMonths.Length; i++)
+            {
+                int startMonth = quarterStartMonths[i];
+
+                // 当前季度开始时间
+                var seasonStart = new DateOnly(date.Year, startMonth, 1);
+
+                // 如果是第一季度，需要看上一年的10月
+                if (i == 0)
+                {
+                    seasonStart = new DateOnly(date.Year, 1, 1);
+                }
+
+                // 下一个季度开始时间
+                DateOnly nextSeasonStart;
+                if (i == 3)
+                {
+                    nextSeasonStart = new DateOnly(date.Year + 1, 1, 1);
+                }
+                else
+                {
+                    nextSeasonStart = new DateOnly(date.Year, quarterStartMonths[i + 1], 1);
+                }
+
+                // 👇 关键：给“下个季度”留提前空间
+                var adjustedNextSeasonStart = nextSeasonStart.AddDays(-bufferDays);
+
+                if (date >= seasonStart && date < adjustedNextSeasonStart)
+                {
+                    return (date.Year, i + 1);
+                }
+
+                // 👇 提前进入下个季度
+                if (date >= adjustedNextSeasonStart && date < nextSeasonStart)
+                {
+                    int nextQuarter = (i + 1) % 4 + 1;
+                    int nextYear = (i == 3) ? date.Year + 1 : date.Year;
+                    return (nextYear, nextQuarter);
+                }
+            }
+
+            // 理论不会走到这里
+            return (date.Year, (date.Month - 1) / 3 + 1);
         }
 
         public static List<AnimeInfo> LoadAllAnimeInfo()
