@@ -7,7 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
-    <ApplicationIcon>anime_girl_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Icon\Generated Image January 27, 2026 - 11_41AM.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,18 +16,20 @@
     <None Remove="Fonts\NotoSans-VariableFont_wdth,wght.ttf" />
     <None Remove="Icon\anime_girl_icon.ico" />
     <None Remove="Icon\DontFindImage.png" />
+    <None Remove="Icon\Generated Image January 27, 2026 - 11_41AM.ico" />
     <None Remove="Icon\icon.png" />
     <None Remove="Icon\icon1.png" />
+    <None Remove="Icon\icon2.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="anime_girl_icon.ico" />
+    <Content Include="Icon\Generated Image January 27, 2026 - 11_41AM.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="WPF-UI" Version="4.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="WPF-UI" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,10 +45,16 @@
     <Resource Include="Icon\DontFindImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Icon\Generated Image January 27, 2026 - 11_41AM.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Icon\icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Icon\icon1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icon\icon2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

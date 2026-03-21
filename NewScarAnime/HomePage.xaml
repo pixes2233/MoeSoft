@@ -9,6 +9,10 @@
       d:DesignHeight="768" d:DesignWidth="1366"
       Title="HomePage">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+
     <Grid x:Name="Home" Background="{DynamicResource AcrylicBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -38,8 +42,6 @@
             <ProgressBar x:Name="ProgressBar" Grid.Column="1" IsIndeterminate="True" Visibility="Hidden" VerticalAlignment="Center"/>
         </Grid>
 
-        
-
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Anime}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -55,59 +57,180 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Border Grid.Row="0" Margin="10" Width="200" Height="285" CornerRadius="25" RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="OpenAnimeInfo">
-                            <Border.RenderTransform>
-                                <ScaleTransform ScaleX="1" ScaleY="1"/>
-                            </Border.RenderTransform>
+                        <ui:CardAction Width="200" Height="285" Margin="10" RenderTransformOrigin="0.5,0.5" Click="OpenAnimeInfo" Cursor="Hand">
+                            <ui:CardAction.RenderTransform>
+                                <ScaleTransform />
+                            </ui:CardAction.RenderTransform>
 
-                            <Border.Effect>
-                                <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="4" Opacity="0.3"/>
-                            </Border.Effect>
+                            <ui:CardAction.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="4" Opacity="0.3" />
+                            </ui:CardAction.Effect>
 
-                            <Border.Style>
-                                <Style TargetType="Border">
+                            <ui:CardAction.Style>
+                                <Style TargetType="ui:CardAction">
+                                    <!-- Template 保持不变 -->
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ui:CardAction">
+                                                <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="25" 
+                                SnapsToDevicePixels="True">
+                                                    <Border.Clip>
+                                                        <RectangleGeometry RadiusX="25" RadiusY="25" Rect="0,0,200,285"/>
+                                                    </Border.Clip>
+                                                    <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+
                                     <Style.Triggers>
-                                        <!-- 鼠标移入动画 -->
+                                        <!-- 1. 鼠标悬停 (MouseEnter): 丝滑放大 -->
                                         <EventTrigger RoutedEvent="MouseEnter">
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <!-- 缩放动画 -->
-                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.15"/>
-                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.15"/>
-                                                    <!-- 颜色动画 -->
-                                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="WhiteSmoke" Duration="0:0:0.15"/>
-                                                    <!-- 阴影增强 -->
-                                                    <DoubleAnimation Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)" To="20" Duration="0:0:0.15"/>
-                                                    <DoubleAnimation Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)" To="8" Duration="0:0:0.15"/>
+                                                    <!-- 使用 CubicEase EaseOut：快速启动，平滑减速停止 -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <!-- 阴影也配合缓动 -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" To="20" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </EventTrigger>
 
-                                        <!-- 鼠标移出动画 -->
+                                        <!-- 2. 鼠标离开 (MouseLeave): 平滑复位 -->
                                         <EventTrigger RoutedEvent="MouseLeave">
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <!-- 缩放恢复 -->
-                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.15"/>
-                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.15"/>
-                                                    <!-- 颜色恢复 -->
-                                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="LightGray" Duration="0:0:0.15"/>
-                                                    <!-- 阴影恢复 -->
-                                                    <DoubleAnimation Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.BlurRadius)" To="10" Duration="0:0:0.15"/>
-                                                    <DoubleAnimation Storyboard.TargetProperty="(Border.Effect).(DropShadowEffect.ShadowDepth)" To="4" Duration="0:0:0.15"/>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" To="10" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </EventTrigger>
+
+                                        <!-- 3. 鼠标按下 (PreviewMouseDown): 快速且有力的下沉 -->
+                                        <EventTrigger RoutedEvent="PreviewMouseDown">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- 按下动作要快 (0.08s)，使用 QuadraticEase 模拟更硬的撞击感 -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.95" Duration="0:0:0.08">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.95" Duration="0:0:0.08">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" To="5" Duration="0:0:0.08">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <QuadraticEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+
+                                        <!-- 4. 鼠标抬起 (PreviewMouseUp): 带轻微回弹的复位 -->
+                                        <EventTrigger RoutedEvent="PreviewMouseUp">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- 使用 BackEase 产生轻微的回弹效果（Overshoot），这会让松手的感觉非常Q弹 -->
+                                                    <!-- Amplitude=0.3 代表回弹幅度，不要太大否则会晃 -->
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <BackEase EasingMode="EaseOut" Amplitude="0.3"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <BackEase EasingMode="EaseOut" Amplitude="0.3"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" To="20" Duration="0:0:0.25">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+
                                     </Style.Triggers>
                                 </Style>
-                            </Border.Style>
+                            </ui:CardAction.Style>
 
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding AnimeCover}" Stretch="UniformToFill"/>
-                            </Border.Background>
-                        </Border>
+                            <ui:CardAction.Content>
+                                <!-- 外部容器添加阴影效果（如果是WPF，建议套在DropShadowEffect中） -->
+                                <Border ClipToBounds="True" CornerRadius="20">
+                                    <Grid>
+                                        <!-- 图片：稍微增加一点缩放动画的准备 -->
+                                        <Image Source="{Binding AnimeCover}" Stretch="UniformToFill" />
 
-                        <TextBlock Grid.Row="1" Text="{Binding AnimeTitleCN}" FontSize="16" HorizontalAlignment="Center"/>
+                                        <!-- 顶层遮罩：底部暗化，防止白色背景图片导致标签看不清 -->
+                                        <Border VerticalAlignment="Bottom" Height="60">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="Transparent" Offset="0"/>
+                                                    <GradientStop Color="#66000000" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+
+                                        <!-- 标签：改用圆角药丸形状，加入半透明模糊感 -->
+                                        <Border Margin="12" 
+                    Padding="10,4" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top"
+                    CornerRadius="12"
+                    Background="#EEFFB7C5"
+                    BorderThickness="1"
+                    BorderBrush="#44FFFFFF"
+                    Visibility="{Binding IsCurrentSeason, Converter={StaticResource BoolToVis}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <!-- 可以在这里加一个闪烁的小圆点或图标 -->
+                                                <Ellipse Width="6" Height="6" Fill="#C71585" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="本季度番剧" 
+                               FontSize="11"
+                               Foreground="#C71585" 
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </ui:CardAction.Content>
+                        </ui:CardAction>
+
+                        <TextBlock Grid.Row="1" Text="{Binding AnimeTitleCN}" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

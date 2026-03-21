@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,6 +25,9 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Wpf.Ui.Controls;
+using static System.Net.WebRequestMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NewScarAnime
 {
@@ -43,11 +47,32 @@ namespace NewScarAnime
             ProgressBar.Visibility = _progressBarState;
         }
 
+        public class AnimeInfo
+        {
+            /// <summary>
+            /// アニメjson中的数据类型
+            /// </summary>
+            public string bangumi_url { get; set; } // Bangumi 的 URL
+            public string name { get; set; } // 动漫标题
+            public string name_chinese { get; set; } // 中文标题
+            public string image_url { get; set; } // 封面图片的 URL
+            public string summary { get; set; } // 动漫简介
+            public int total_episodes { get; set; } // 总集数
+            public string start_date { get; set; } // 首播日期
+            public string air_weekday { get; set; } // 首播星期几
+            public string director { get; set; } // 导演
+            public string writer { get; set; } // 编剧
+            public string studio { get; set; } // 制作公司
+            public int current_episode { get; set; } // 当前集数
+        }
+
         public class AnimeItem
         {
             public string AnimeTitleCN { get; set; } // 动漫中文标题
+            public DateOnly StartDate { get; set; } // 动漫首播日期
             public ImageSource AnimeCover { get; set; } // 动漫封面图片的 URL
             public string BangumiID { get; set; } // Bangumi ID
+            public bool IsCurrentSeason { get; set; }
         }
 
         private static string GetLocalAddress()
@@ -65,8 +90,6 @@ namespace NewScarAnime
             return appSpecificFolder;
         }
 
-
-
         private void LoadItems()
         {
             ///<summary>
@@ -77,6 +100,13 @@ namespace NewScarAnime
             foreach (var info in LoadAllAnimeInfo())
             {
                 string title = info.name_chinese;
+
+                DateOnly startDate = new DateOnly(0001, 1, 1);
+
+                if (info.start_date != "*")
+                {
+                    startDate = DateOnly.ParseExact(info.start_date, "yyyy年M月d日", null);
+                }
 
                 // 构建应用程序专用子文件夹路径
                 string appSpecificFolder = System.IO.Path.Combine(GetLocalAddress(), "AnimeCover");
@@ -90,7 +120,7 @@ namespace NewScarAnime
                 // 创建一个 BitmapImage 作为图像源
                 BitmapImage bitmapImage = new BitmapImage();
 
-                if (File.Exists(coverPath))
+                if (System.IO.File.Exists(coverPath))
                 {
                     try
                     {
@@ -102,14 +132,14 @@ namespace NewScarAnime
                     catch (Exception ex)
                     {
                         // 处理图像文件可能损坏或不可读的情况
-                        MessageBox.Show($"加载图片失败: {coverPath}\n错误: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        new Wpf.Ui.Controls.MessageBox { Title = "System", Content = $"加载图片失败: {coverPath}\n错误: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
                         // （可选）设置一个占位符图像或 null
                         bitmapImage = null;
                     }
                 }
                 else
                 {
-                    MessageBox.Show($"封面图片未找到: {coverPath}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    new Wpf.Ui.Controls.MessageBox { Title = "查找封面异常", Content = $"封面图片未找到: {coverPath}", CloseButtonText = "确定" }.ShowDialogAsync();
                     // （可选）设置一个占位符图像或 null
                     bitmapImage = null;
                 }
@@ -117,9 +147,27 @@ namespace NewScarAnime
                 Anime.Add(new AnimeItem
                 {
                     AnimeTitleCN = title,
+                    StartDate = startDate,
                     AnimeCover = bitmapImage,
-                    BangumiID = bangumiId
+                    BangumiID = bangumiId,
+                    IsCurrentSeason = false
                 });
+
+                // 本季度番剧显示逻辑
+                for (int i = 0; i < Anime.Count; i++)
+                {
+                    DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+                    var animeItem = Anime[i];
+                    int animeQuarter = (animeItem.StartDate.Month - 1) / 3 + 1;
+                    int todayQuarter = (today.Month - 1) / 3 + 1;
+                    int animeYear = animeItem.StartDate.Year;
+                    int todayYear = today.Year;
+                    if ((animeQuarter == todayQuarter) && (animeYear == todayYear))
+                    {
+                        Anime[i].IsCurrentSeason = true;
+                        Anime.Move(i, 0);
+                    }
+                }
             }
         }
 
@@ -139,7 +187,7 @@ namespace NewScarAnime
             {
                 try
                 {
-                    string json = File.ReadAllText(file);
+                    string json = System.IO.File.ReadAllText(file);
                     AnimeInfo info = JsonConvert.DeserializeObject<AnimeInfo>(json);
                     if (info != null)
                     {
@@ -147,35 +195,15 @@ namespace NewScarAnime
                     }
                     else
                     {
-                        MessageBox.Show($"文件内容为空或格式不正确: {file}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"文件内容为空或格式不正确: {file}", CloseButtonText = "确定" }.ShowDialogAsync();
                     }
                 }
                 catch
                 {
-                    MessageBox.Show($"无法解析文件: {file}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"无法解析文件: {file}", CloseButtonText = "确定" }.ShowDialogAsync();
                 }
             }
             return animeList;
-        }
-
-
-        public class AnimeInfo
-        {
-            /// <summary>
-            /// アニメjson中的数据类型
-            /// </summary>
-            public string bangumi_url { get; set; } // Bangumi 的 URL
-            public string name { get; set; } // 动漫标题
-            public string name_chinese { get; set; } // 中文标题
-            public string image_url { get; set; } // 封面图片的 URL
-            public string summary { get; set; } // 动漫简介
-            public int total_episodes { get; set; } // 总集数
-            public string start_date { get; set; } // 首播日期
-            public string air_weekday { get; set; } // 首播星期几
-            public string director { get; set; } // 导演
-            public string writer { get; set; } // 编剧
-            public string studio { get; set; } // 制作公司
-            public int current_episode { get; set; } // 当前集数
         }
 
         public static async Task DownloadImageSync(string imageUrl, string fileName)
@@ -202,15 +230,15 @@ namespace NewScarAnime
                     byte[] imageBytes = await client.GetByteArrayAsync(imageUrl);
 
                     // 2. 将字节数组写入本地文件（同步版本）
-                    await Task.Run(() => File.WriteAllBytes(filePath, imageBytes));
+                    await Task.Run(() => System.IO.File.WriteAllBytes(filePath, imageBytes));
                 }
                 catch (HttpRequestException httpEx)
                 {
-                    MessageBox.Show($"下载失败 (网络/HTTP 错误): {httpEx.Message}");
+                    new Wpf.Ui.Controls.MessageBox { Title = "网络异常", Content = $"下载失败 (网络/HTTP 错误): {httpEx.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"保存失败 (未知错误): {ex.Message}");
+                    new Wpf.Ui.Controls.MessageBox { Title = "系统异常", Content = $"保存失败 (未知错误): {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
                 }
             }
         }
@@ -254,7 +282,7 @@ namespace NewScarAnime
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"解析 JSON 时出错: {ex.Message}", "解析错误");
+                new Wpf.Ui.Controls.MessageBox { Title = "解析异常", Content = $"解析 JSON 时出错: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
                 return string.Empty;
             }
         }
@@ -312,7 +340,7 @@ namespace NewScarAnime
                         }
                         else
                         {
-                            MessageBox.Show($"Exe Error: {error}");
+                            new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"Exe Error: {error}", CloseButtonText = "确定" }.ShowDialogAsync();
                         }
                     }
 
@@ -321,7 +349,7 @@ namespace NewScarAnime
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"Error: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
             }
         }
 
@@ -343,12 +371,12 @@ namespace NewScarAnime
 
                 // 4. 将 JSON 数据写入文件
                 // 如果文件不存在，它会创建文件；如果文件已存在，它会覆盖现有内容。
-                File.WriteAllText(filePath, jsonData);
+                System.IO.File.WriteAllText(filePath, jsonData);
             }
             catch (Exception ex)
             {
                 // 6. 显示错误消息
-                MessageBox.Show($"保存 JSON 数据时出错: {ex.Message}", "保存错误");
+                new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"保存 JSON 数据时出错: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
             }
         }
 
@@ -361,36 +389,22 @@ namespace NewScarAnime
                 string filePath = System.IO.Path.Combine(appSpecificFolder, fileName);
 
                 // 检查文件是否存在
-                if (File.Exists(filePath))
+                if (System.IO.File.Exists(filePath))
                 {
                     // 从文件读取 JSON 数据
                     // File.ReadAllText 读取指定文件的所有文本内容，并将其作为单个字符串返回。
-                    jsonData = File.ReadAllText(filePath);
+                    jsonData = System.IO.File.ReadAllText(filePath);
                 }
                 else
                 {
-                    MessageBox.Show("未找到保存的 JSON 数据。", "加载信息");
+                    new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = "未找到保存的 JSON 数据。", CloseButtonText = "确定" }.ShowDialogAsync();
                 }
             }
             catch (Exception ex)
             { 
-                MessageBox.Show($"加载 JSON 数据时出错: {ex.Message}", "加载错误");
+                new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"加载 JSON 数据时出错: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
             }
             return jsonData; // 返回加载到的 JSON 字符串（如果未找到或出错，则返回空字符串）
-        }
-
-        private void OpenAnimeInfo(object sender, MouseButtonEventArgs e)
-        {
-            Border clickedBorder = sender as Border;
-
-            // 获取 Border 的 DataContext，它就是与该 Border 绑定的 AnimeItem 对象
-            AnimeItem clickedAnime = clickedBorder.DataContext as AnimeItem;
-
-            string bangumiId = clickedAnime.BangumiID;
-
-            this.NavigationService.Content = new AnimeInfoPage(bangumiId);
-
-            e.Handled = true;
         }
 
         private void FileLink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -428,6 +442,23 @@ namespace NewScarAnime
 
             _progressBarState = Visibility.Hidden;
             ProgressBar.Visibility = _progressBarState;
+        }
+
+        private void OpenAnimeInfo(object sender, RoutedEventArgs e)
+        {
+            // 获取触发事件的 CardAction 控件
+            Wpf.Ui.Controls.CardAction clickedCardAction = sender as Wpf.Ui.Controls.CardAction;
+
+            // 确保点击的是 CardAction 控件并且 DataContext 非空
+            if (clickedCardAction != null && clickedCardAction.DataContext is AnimeItem clickedAnime)
+            {
+                string bangumiId = clickedAnime.BangumiID;
+
+                // 使用 bangumiId 导航到 AnimeInfoPage
+                this.NavigationService.Content = new AnimeInfoPage(bangumiId);
+            }
+
+            e.Handled = true;
         }
     }
 }

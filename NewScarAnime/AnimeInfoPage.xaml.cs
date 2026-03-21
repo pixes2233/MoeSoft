@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using MS.WindowsAPICodePack.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -22,6 +23,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 using static NewScarAnime.HomePage;
 
 namespace NewScarAnime
@@ -33,8 +36,7 @@ namespace NewScarAnime
     {
         private string _bangumiId;
         private string _bangumiURL;
-        private string _cachedPotPlayerPath;
-        private readonly string configPath = System.IO.Path.Combine(GetLocalAddress(), "potplayer_path.txt");
+        private string _animeTitle;
 
         public AnimeInfoPage()
         {
@@ -124,8 +126,6 @@ namespace NewScarAnime
 
             // 在这里，你可以使用 _bangumiId 来加载和显示数据
             LoadAnimeData(_bangumiId);
-
-            CheckPotPlayerStatus();
         }
 
         private void LoadAnimeData(string id)
@@ -168,17 +168,19 @@ namespace NewScarAnime
                     catch (Exception ex)
                     {
                         // 处理图像文件可能损坏或不可读的情况
-                        System.Windows.MessageBox.Show($"加载图片失败: {coverPath}\n错误: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        System.Windows.MessageBox.Show($"加载图片失败: {coverPath}\n错误: {ex.Message}", "错误", System.Windows.MessageBoxButton.OK, MessageBoxImage.Error);
                         // （可选）设置一个占位符图像或 null
                         bitmapImage = null;
                     }
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show($"封面图片未找到: {coverPath}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Windows.MessageBox.Show($"封面图片未找到: {coverPath}", "错误", System.Windows.MessageBoxButton.OK, MessageBoxImage.Error);
                     // （可选）设置一个占位符图像或 null
                     bitmapImage = null;
                 }
+
+                _animeTitle = deserializedUser.name;
 
                 // 创建一个 AnimeDetails 实例并填充数据
                 AnimeDetails animeData = new AnimeDetails
@@ -422,144 +424,23 @@ namespace NewScarAnime
 
         private async void RefreshAnimeData(object sender, RoutedEventArgs e)
         {
-            RefreshBtn.Content = "正在刷新...";
+            /// <summary>
+            /// 刷新アニメ信息
+            /// </summary>
 
+            MainWindow.GlobalSnackbarService.Show("System:", "正在为您刷新番剧数据", ControlAppearance.Info, TimeSpan.FromSeconds(3));
             string animeJson = LoadJsonOutput(_bangumiId + ".json");
             AnimeInfo deserializedUser = JsonConvert.DeserializeObject<AnimeInfo>(animeJson);
 
             await RunBangumiScraper(deserializedUser.bangumi_url);
 
             LoadAnimeData(_bangumiId);
-
-            RefreshBtn.Content = "刷新成功";
-        }
-
-        public void CheckPotPlayerStatus()
-        {
-            string potPlayerPath = GetPotPlayerPath();
-            PotOpenMode.IsEnabled = !string.IsNullOrEmpty(potPlayerPath);
-        }
-
-        public string GetPotPlayerPath()
-        {
-            // 内存缓存
-            if (!string.IsNullOrEmpty(_cachedPotPlayerPath) && File.Exists(_cachedPotPlayerPath))
-                return _cachedPotPlayerPath;
-
-            // 配置缓存
-            if (File.Exists(configPath))
-            {
-                var saved = File.ReadAllText(configPath).Trim();
-                if (File.Exists(saved))
-                    return _cachedPotPlayerPath = saved;
-            }
-
-            // 注册表查找
-            string path = FindFromRegistry();
-            if (!string.IsNullOrEmpty(path))
-                return SaveAndReturn(path);
-
-            // 目录扫描
-            path = SearchInProgramFiles();
-            if (!string.IsNullOrEmpty(path))
-                return SaveAndReturn(path);
-
-            // 找不到
-            return null;
-        }
-
-        private string SaveAndReturn(string path)
-        {
-            try
-            {
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
-                File.WriteAllText(configPath, path);
-            }
-            catch { }
-            _cachedPotPlayerPath = path;
-            return path;
-        }
-
-        private string FindFromRegistry()
-        {
-            string[] roots =
-            {
-            @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-            @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
-        };
-            RegistryKey[] hives = { Registry.LocalMachine, Registry.CurrentUser };
-
-            foreach (var hive in hives)
-            {
-                foreach (var root in roots)
-                {
-                    using (var key = hive.OpenSubKey(root))
-                    {
-                        if (key == null) continue;
-                        foreach (var subKeyName in key.GetSubKeyNames())
-                        {
-                            using (var subKey = key.OpenSubKey(subKeyName))
-                            {
-                                var name = subKey?.GetValue("DisplayName") as string;
-                                if (!string.IsNullOrEmpty(name) &&
-                                    name.Contains("PotPlayer", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    // 尝试 DisplayIcon
-                                    var icon = subKey.GetValue("DisplayIcon") as string;
-                                    if (!string.IsNullOrEmpty(icon))
-                                    {
-                                        var exePath = ExtractExePath(icon);
-                                        if (File.Exists(exePath)) return exePath;
-                                    }
-                                    // 尝试 InstallLocation
-                                    var loc = subKey.GetValue("InstallLocation") as string;
-                                    if (!string.IsNullOrEmpty(loc))
-                                    {
-                                        var tryExe = System.IO.Path.Combine(loc, "PotPlayerMini64.exe");
-                                        if (File.Exists(tryExe)) return tryExe;
-                                        tryExe = System.IO.Path.Combine(loc, "PotPlayer.exe");
-                                        if (File.Exists(tryExe)) return tryExe;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        private string ExtractExePath(string input)
-        {
-            int exeEnd = input.IndexOf(".exe", StringComparison.OrdinalIgnoreCase);
-            if (exeEnd > 0)
-                return input.Substring(0, exeEnd + 4).Trim('"');
-            return input.Trim('"');
-        }
-
-        private string SearchInProgramFiles()
-        {
-            string[] baseDirs =
-            {
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-        };
-            foreach (var dir in baseDirs)
-            {
-                try
-                {
-                    var found = Directory.EnumerateFiles(dir, "PotPlayer*.exe", SearchOption.AllDirectories)
-                                         .FirstOrDefault();
-                    if (!string.IsNullOrEmpty(found))
-                        return found;
-                }
-                catch { }
-            }
-            return null;
+            MainWindow.GlobalSnackbarService.Show("System:", "番剧数据已刷新", ControlAppearance.Info, TimeSpan.FromSeconds(3));
         }
 
         private void OpenBangumiURL(object sender, RoutedEventArgs e)
         {
+            MainWindow.GlobalSnackbarService.Show("System:", "已打开 Bangumi 页面", ControlAppearance.Info, TimeSpan.FromSeconds(3));
             Process.Start(new ProcessStartInfo
             {
                 FileName = _bangumiURL,
@@ -581,24 +462,11 @@ namespace NewScarAnime
                     // 如果你要直接打开文件，可以在这里调用
                     try
                     {
-                        string potPath = GetPotPlayerPath();
-                        if (!string.IsNullOrEmpty(potPath) && File.Exists(potPath))
+                        Process.Start(new ProcessStartInfo
                         {
-                            Process.Start(new ProcessStartInfo
-                            {
-                                FileName = potPath,
-                                Arguments = $"\"{file.Path}\"",
-                                UseShellExecute = false
-                            });
-                        }
-                        else
-                        {
-                            Process.Start(new ProcessStartInfo
-                            {
-                                FileName = file.Path,
-                                UseShellExecute = true
-                            });
-                        }
+                            FileName = file.Path,
+                            UseShellExecute = true
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -637,6 +505,70 @@ namespace NewScarAnime
             }
 
             LoadAnimeData(_bangumiId);
+        }
+
+        private async void DeleteAnime(object sender, RoutedEventArgs e)
+        {
+            var result = await MainWindow.Instance.ShowDialogAsync(
+                "确认删除",
+                "你确定要永久删除这部番剧吗？此操作无法撤销。",
+                "确认删除",
+                "取消"
+            );
+
+            if (result == ContentDialogResult.Primary)
+            {
+                // 用户点击了“确认删除”
+                PerformDeleteAction();
+            }
+            else
+            {
+
+            }
+        }
+
+        private void PerformDeleteAction()
+        {
+            MainWindow.GlobalSnackbarService.Show("System:", $"正在删除「{_animeTitle}」", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+
+            string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string appSpecificFolder = System.IO.Path.Combine(appDataFolder, "ScarAnime");
+            string animeCoverFolder = System.IO.Path.Combine(appSpecificFolder, "AnimeCover");
+            string animeInfoFolder = System.IO.Path.Combine(appSpecificFolder, "AnimeInfo");
+            string animeLocalLinkFolder = System.IO.Path.Combine(appSpecificFolder, "AnimeLocalLink");
+
+            string infoFilePath = System.IO.Path.Combine(animeInfoFolder, $"{_bangumiId}.json");
+            string linkFilePath = System.IO.Path.Combine(animeLocalLinkFolder, $"{_bangumiId}.json");
+            string coverFilePath = System.IO.Path.Combine(animeCoverFolder, $"{_bangumiId}.jpg");
+
+            // --- 3. 依次删除这三个文件 ---
+            SafeDeleteFile(infoFilePath);
+            SafeDeleteFile(linkFilePath);
+            SafeDeleteFile(coverFilePath);
+
+            this.NavigationService.Content = new HomePage();
+        }
+
+        private void SafeDeleteFile(string filePath)
+        {
+            // 首先检查文件是否存在
+            if (!System.IO.File.Exists(filePath))
+            {
+                MainWindow.GlobalSnackbarService.Show("System:", $"文件不存在，跳过删除: 「{_animeTitle}」", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+                return; // 文件不存在，直接返回
+            }
+
+            try
+            {
+                // 文件存在，执行删除
+                System.IO.File.Delete(filePath);
+                MainWindow.GlobalSnackbarService.Show("System:", $"成功删除文件: 「{_animeTitle}」", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+            }
+            catch (Exception ex)
+            {
+                // 捕获可能发生的异常（如权限不足、文件被占用等）
+                MainWindow.GlobalSnackbarService.Show("System:", $"删除文件失败: 「{_animeTitle}」。错误: {ex.Message}", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+            }
         }
     }
 }

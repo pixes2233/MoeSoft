@@ -7,66 +7,179 @@
       xmlns:local="clr-namespace:NewScarAnime"
       mc:Ignorable="d" 
       d:DesignHeight="768" d:DesignWidth="1366"
-      Title="BangumiSearch">
+      Title="BangumiSearch"
+      Foreground="Black">
 
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="Bangumi搜索番剧 Beta版" 
-                       FontSize="32" 
-                       FontWeight="Bold" 
-                       HorizontalAlignment="Center" 
-                       Margin="20,10,0,10"
-                       Foreground="#FFB6C1">
+    <Page.Resources>
+        <!-- 基础色彩 -->
+        <SolidColorBrush x:Key="CardBackground" Color="#0FFFFFFF"/>
+        <!-- 稍微降低不透明度，增强通透感 -->
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#1FFFFFFF"/>
+        <!-- 样式：卡片容器 -->
+        <Style x:Key="ModernCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="25"/>
+            <!-- 稍微减小圆角，显得更现代硬朗 -->
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="0,0,0,20" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题区域 -->
+        <StackPanel Grid.Row="0" Margin="0,30,0,20">
+            <TextBlock Text="Bangumi 番剧搜索"
+       FontSize="36"
+       FontWeight="ExtraBold"
+       HorizontalAlignment="Center"
+       Foreground="#FFB6C1"
+       FontFamily="Segoe UI Variable Display">
                 <TextBlock.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="4" ShadowDepth="1"/>
+                    <DropShadowEffect Color="#FFB6C1"
+                      BlurRadius="20"
+                      ShadowDepth="0"
+                      Opacity="0.4"/>
                 </TextBlock.Effect>
             </TextBlock>
 
-            <ui:TextBlock Text="数据来源:https://bangumi.tv/ 目前该功能处于Beta测试版 搜索结果只显示第一页 点击添加后要一段时间才可生效" HorizontalAlignment="Center">
-            </ui:TextBlock>
+            <Border Background="#20FFB6C1"
+    HorizontalAlignment="Center"
+    CornerRadius="4"
+    Margin="0,5,0,0"
+    Padding="8,2">
+                <TextBlock Text="BETA 测试版"
+           FontSize="10"
+           FontWeight="Bold"
+           Foreground="#FFB6C1"/>
+            </Border>
 
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <ui:AutoSuggestBox x:Name="AnimeName" Margin="10" Width="300" KeyDown="AnimeNameSearch" PlaceholderText="输入番剧名称并回车搜索"/>
-                <ui:TextBlock x:Name="SearchResultCount" Text="遇到错误惹(￣﹏￣；)" Margin="10" VerticalAlignment="Center" Visibility="Hidden"/>
-            </StackPanel>
+            <ui:TextBlock Text="数据来源: bangumi.tv | 搜索结果目前仅显示第一页"
+          FontSize="12"
+          Opacity="0.6"
+          HorizontalAlignment="Center"
+          Margin="0,10,0,0"/>
+        </StackPanel>
 
-            <ui:ProgressRing x:Name="SearchStatus" IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Center"/>
+        <!-- 搜索框 -->
+        <StackPanel Grid.Row="1"
+    Orientation="Vertical"
+    HorizontalAlignment="Center"
+    Margin="0,0,0,20">
 
-            <ItemsControl ItemsSource="{Binding AnimeResult}" HorizontalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+            <Grid Width="400">
+                <ui:AutoSuggestBox x:Name="AnimeName"
+                   Height="45"
+                   KeyDown="AnimeNameSearch"
+                   TextChanged="TextChange"
+                   PlaceholderText="输入番剧名称..."
+                   Icon="{ui:SymbolIcon Symbol=Search24}"
+                   ClearButtonEnabled="True"
+                   IsSuggestionListOpen="False"/>
+            </Grid>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="10" HorizontalAlignment="Center" Width="800" Height="300" CornerRadius="25" Background="#80FFDBE5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+            <ui:TextBlock x:Name="SearchResultCount"
+          Text="遇到错误惹(￣﹏￣；)"
+          FontSize="12"
+          Foreground="Red"
+          HorizontalAlignment="Center"
+          Margin="0,10,0,0"
+          Visibility="Hidden"/>
 
-                                <ui:Image Grid.Column="0" Height="260" VerticalAlignment="Center" Stretch="Uniform" Margin="20" CornerRadius="25">
-                                    <ui:Image.Source>
-                                        <BitmapImage UriSource="{Binding image}" CreateOptions="IgnoreImageCache" CacheOption="OnLoad"/>
-                                    </ui:Image.Source>
+            <ui:ProgressRing x:Name="SearchStatus"
+             IsIndeterminate="True"
+             Visibility="Collapsed"
+             Width="30"
+             Height="30"
+             Margin="0,10"/>
+        </StackPanel>
 
-                                    <ui:Image.Effect>
-                                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Color="Black" Opacity="0.8"/>
-                                    </ui:Image.Effect>
-                                </ui:Image>
-                                <StackPanel Grid.Column="1" Orientation="Vertical">
-                                    <ui:TextBlock Text="{Binding title}" FontSize="25" FontWeight="Bold" Margin="10" Foreground="Black" HorizontalAlignment="Left"/>
-                                    <ui:Button Margin="10" Content="添加番剧" Appearance="Primary" FontSize="14" Click="AddAnime" VerticalAlignment="Top" BorderBrush="Transparent" CornerRadius="15"/>
-                                    <ui:Button Margin="10" Content="打开链接" Appearance="Primary" FontSize="14" Click="OpenLink" VerticalAlignment="Top" BorderBrush="Transparent" CornerRadius="15"/>
+        <!-- 结果列表（不再包 ScrollViewer） -->
+        <ItemsControl Grid.Row="2"
+      ItemsSource="{Binding AnimeResult}"
+      HorizontalAlignment="Center"
+      Margin="0,0,0,50">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource ModernCard}"
+            Width="750"
+            Height="250">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 左侧封面 -->
+                            <Border Grid.Column="0"
+                    CornerRadius="20"
+                    Width="160">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10"
+                                      Opacity="0.25"
+                                      ShadowDepth="2"/>
+                                </Border.Effect>
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding image}"
+                                Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+
+                            <!-- 右侧信息 -->
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <ui:TextBlock Grid.Row="0"
+                              Text="{Binding title}"
+                              FontSize="20"
+                              FontWeight="Bold"
+                              TextWrapping="WrapWithOverflow"
+                              Margin="10,5,0,0"/>
+
+                                <StackPanel Grid.Row="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+
+                                    <ui:Button Icon="{ui:SymbolIcon Symbol=Globe24}"
+                               Content="Bangumi"
+                               Appearance="Secondary"
+                               Click="OpenLink"
+                               Cursor="Hand"
+                               Margin="0,0,10,0"
+                               ToolTip="在浏览器中打开"/>
+
+                                    <ui:Button Icon="{ui:SymbolIcon Symbol=Add24}"
+                               Content="添加番剧"
+                               Appearance="Primary"
+                               Click="AddAnime"
+                               Cursor="Hand"
+                               ToolTip="添加到我的列表"/>
                                 </StackPanel>
                             </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
     </Grid>
 </Page>

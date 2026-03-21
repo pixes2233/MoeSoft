@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 using static NewScarAnime.HomePage;
 
 namespace NewScarAnime
@@ -113,7 +115,7 @@ namespace NewScarAnime
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                System.Windows.MessageBox.Show($"Error: {ex.Message}");
             }
         }
 
@@ -121,10 +123,12 @@ namespace NewScarAnime
         {
             if (e.Key == Key.Enter)
             {
+                MainWindow.GlobalSnackbarService.Show("System:", "正在搜索，请稍候...", ControlAppearance.Info, TimeSpan.FromSeconds(3));
                 AnimeResult.Clear();
                 SearchStatus.Visibility = Visibility.Visible;
                 await RunBangumiSearchScraper(AnimeName.Text);
                 SearchStatus.Visibility = Visibility.Collapsed;
+                MainWindow.GlobalSnackbarService.Show("System:", "搜索完成 q(≧▽≦q)", ControlAppearance.Info, TimeSpan.FromSeconds(3));
             }
         }
 
@@ -133,7 +137,25 @@ namespace NewScarAnime
             if (!(sender is Wpf.Ui.Controls.Button btn) || !(btn.DataContext is BangumiSearchResult animeItem))
                 return;
 
-            this.NavigationService.Content = new SearchStatus(animeItem.link);
+            MainWindow.GlobalSnackbarService.Show("System:", "正在添加，请耐心等待 (●'◡'●)", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+
+            AddAnime(animeItem.link);
+        }
+
+        private async void AddAnime(string link)
+        {
+            try
+            {
+                await HomePage.RunBangumiScraper(link);
+            }
+            catch (Exception ex)
+            {
+                new Wpf.Ui.Controls.MessageBox { Title = "错误", Content = $"操作失败：{ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
+            }
+            finally
+            {
+                MainWindow.GlobalSnackbarService.Show("System:", "添加完成，返回首页查看吧！q(≧▽≦q)", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+            }
         }
 
         private async void OpenLink(object sender, RoutedEventArgs e)
@@ -149,5 +171,18 @@ namespace NewScarAnime
             }
         }
 
+        private void TextChange(Wpf.Ui.Controls.AutoSuggestBox sender, Wpf.Ui.Controls.AutoSuggestBoxTextChangedEventArgs args)
+        {
+            /// <summary>
+            /// 把建议清空，防止遮挡输入框
+            /// </summary>
+
+            // 如果是用户输入，强制关闭提示列表
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                sender.ItemsSource = null; // 清空内容
+                sender.IsSuggestionListOpen = false; // 关闭弹出的下拉提示
+            }
+        }
     }
 }
