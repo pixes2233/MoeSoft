@@ -38,36 +38,65 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ui:Button Grid.Column="0" Appearance="Transparent" BorderThickness="0" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Click="BackToHome">
+            <ui:Button
+    Grid.Column="0"
+    Appearance="Secondary"
+    CornerRadius="18"
+    Width="36"
+    Height="36"
+    Padding="0"
+    Margin="10"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Top"
+    Click="BackToHome">
+
                 <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="ArrowLeft48"  FontSize="25"/>
+                    <ui:SymbolIcon Symbol="ArrowLeft48" FontSize="18"/>
                 </ui:Button.Icon>
             </ui:Button>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
-                <ui:DropDownButton Content="更多操作">
+                <ui:DropDownButton
+    Content="更多操作"
+    Appearance="Secondary"
+    CornerRadius="8"
+    Padding="12,6"
+    MinWidth="120">
+
                     <ui:DropDownButton.Flyout>
-                        <ContextMenu>
-                            <MenuItem Header="Bangumi网址" Click="OpenBangumiURL">
+                        <ContextMenu
+            Padding="6"
+            BorderThickness="1"
+            MinWidth="180">
+
+                            <!-- 常规操作 -->
+                            <MenuItem Header="Bangumi 网址" Click="OpenBangumiURL">
                                 <MenuItem.Icon>
-                                    <ui:SymbolIcon Symbol="Link48" />
+                                    <ui:SymbolIcon Symbol="Link48"/>
                                 </MenuItem.Icon>
                             </MenuItem>
+
                             <MenuItem Header="刷新数据" Click="RefreshAnimeData">
                                 <MenuItem.Icon>
-                                    <ui:SymbolIcon Symbol="ArrowClockwise48" />
+                                    <ui:SymbolIcon Symbol="ArrowClockwise48"/>
                                 </MenuItem.Icon>
                             </MenuItem>
+
                             <MenuItem Header="本地视频链接" Click="AddLocalLinkView">
                                 <MenuItem.Icon>
-                                    <ui:SymbolIcon Symbol="Link48" />
+                                    <ui:SymbolIcon Symbol="Link48"/>
                                 </MenuItem.Icon>
                             </MenuItem>
+
+                            <!-- 分隔（危险区） -->
+                            <Separator Margin="6,8"/>
+
                             <MenuItem Header="删除本番剧" Click="DeleteAnime">
                                 <MenuItem.Icon>
-                                    <ui:SymbolIcon Symbol="Delete48" />
+                                    <ui:SymbolIcon Symbol="Delete48"/>
                                 </MenuItem.Icon>
                             </MenuItem>
+
                         </ContextMenu>
                     </ui:DropDownButton.Flyout>
                 </ui:DropDownButton>
@@ -115,7 +144,7 @@
                 </TextBlock>
                 <Border Grid.Row="2" Grid.Column="0" CornerRadius="25" Margin="10">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <TextBlock Text="{Binding AnimeDetails.Summary}" FontSize="15" TextWrapping="Wrap" Foreground="Gray"/>
+                        <TextBlock Text="{Binding AnimeDetails.Summary}" FontSize="15" TextWrapping="Wrap"/>
                     </ScrollViewer>
                 </Border>
             </Grid>
