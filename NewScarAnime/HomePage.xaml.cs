@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MS.WindowsAPICodePack.Internal;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +29,7 @@ using System.Windows.Shapes;
 using Wpf.Ui.Controls;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace NewScarAnime
 {
@@ -43,8 +45,8 @@ namespace NewScarAnime
             InitializeComponent();
             this.DataContext = this;
             Anime = new ObservableCollection<AnimeItem>();
-            LoadItems();
             ProgressBar.Visibility = _progressBarState;
+            Loaded += async (_, __) => await LoadItems();
         }
 
         public class AnimeInfo
@@ -90,82 +92,97 @@ namespace NewScarAnime
             return appSpecificFolder;
         }
 
-        private void LoadItems()
+        private async Task LoadItems()
         {
             ///<summary>
             ///载入所有AnimeInfo数据并显示在首页
             /// </summary>
 
             Anime.Clear();
-            foreach (var info in LoadAllAnimeInfo())
+            List<AnimeItem> tempList = await Task.Run(() =>
             {
-                string title = info.name_chinese;
-
-                DateOnly startDate = new DateOnly(0001, 1, 1);
-
-                if (info.start_date != "*")
+                List<AnimeItem> tempList = new List<AnimeItem>();
+                foreach (var info in LoadAllAnimeInfo())
                 {
-                    startDate = DateOnly.ParseExact(info.start_date, "yyyy年M月d日", null);
-                }
+                    string title = info.name_chinese;
 
-                // 构建应用程序专用子文件夹路径
-                string appSpecificFolder = System.IO.Path.Combine(GetLocalAddress(), "AnimeCover");
+                    DateOnly startDate = new DateOnly(0001, 1, 1);
 
-                string bangumiId = ExtractSubjectId(info.bangumi_url);
-
-                string fileName = $"{bangumiId}.jpg"; // 使用提取的ID作为文件名
-
-                string coverPath = System.IO.Path.Combine(appSpecificFolder, fileName);
-
-                // 创建一个 BitmapImage 作为图像源
-                BitmapImage bitmapImage = new BitmapImage();
-
-                if (System.IO.File.Exists(coverPath))
-                {
-                    try
+                    if (info.start_date != "*")
                     {
-                        bitmapImage.BeginInit();
-                        bitmapImage.UriSource = new Uri(coverPath, UriKind.Absolute);
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // 这确保文件不会被锁定
-                        bitmapImage.EndInit();
+                        startDate = DateOnly.ParseExact(info.start_date, "yyyy年M月d日", null);
                     }
-                    catch (Exception ex)
+
+                    // 构建应用程序专用子文件夹路径
+                    string appSpecificFolder = System.IO.Path.Combine(GetLocalAddress(), "AnimeCover");
+
+                    string bangumiId = ExtractSubjectId(info.bangumi_url);
+
+                    string fileName = $"{bangumiId}.jpg"; // 使用提取的ID作为文件名
+
+                    string coverPath = System.IO.Path.Combine(appSpecificFolder, fileName);
+
+                    // 创建一个 BitmapImage 作为图像源
+                    BitmapImage bitmapImage = new BitmapImage();
+
+                    if (System.IO.File.Exists(coverPath))
                     {
-                        // 处理图像文件可能损坏或不可读的情况
-                        new Wpf.Ui.Controls.MessageBox { Title = "System", Content = $"加载图片失败: {coverPath}\n错误: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
+                        try
+                        {
+                            bitmapImage.BeginInit();
+                            bitmapImage.UriSource = new Uri(coverPath, UriKind.Absolute);
+                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // 这确保文件不会被锁定
+                            bitmapImage.EndInit();
+                            bitmapImage.Freeze();
+                        }
+                        catch (Exception ex)
+                        {
+                            // 处理图像文件可能损坏或不可读的情况
+                            new Wpf.Ui.Controls.MessageBox { Title = "System", Content = $"加载图片失败: {coverPath}\n错误: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
+                            // （可选）设置一个占位符图像或 null
+                            bitmapImage = null;
+                        }
+                    }
+                    else
+                    {
+                        new Wpf.Ui.Controls.MessageBox { Title = "查找封面异常", Content = $"封面图片未找到: {coverPath}", CloseButtonText = "确定" }.ShowDialogAsync();
                         // （可选）设置一个占位符图像或 null
                         bitmapImage = null;
                     }
-                }
-                else
-                {
-                    new Wpf.Ui.Controls.MessageBox { Title = "查找封面异常", Content = $"封面图片未找到: {coverPath}", CloseButtonText = "确定" }.ShowDialogAsync();
-                    // （可选）设置一个占位符图像或 null
-                    bitmapImage = null;
-                }
 
-                Anime.Add(new AnimeItem
-                {
-                    AnimeTitleCN = title,
-                    StartDate = startDate,
-                    AnimeCover = bitmapImage,
-                    BangumiID = bangumiId,
-                    IsCurrentSeason = false
-                });
-
-                // 本季度番剧显示逻辑
-                for (int i = 0; i < Anime.Count; i++)
-                {
-                    DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-                    var animeItem = Anime[i];
-                    var season = GetAnimeSeason(animeItem.StartDate);
-
-                    if (IsCurrentSeason(animeItem.StartDate))
+                    tempList.Add(new AnimeItem
                     {
-                        Anime[i].IsCurrentSeason = true;
-                        Anime.Move(i, 0);
-                    }
+                        AnimeTitleCN = title,
+                        StartDate = startDate,
+                        AnimeCover = bitmapImage,
+                        BangumiID = bangumiId,
+                        IsCurrentSeason = false
+                    });
                 }
+                return tempList;
+            });
+
+            // 本季度番剧显示逻辑
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+                var animeItem = tempList[i];
+                var season = GetAnimeSeason(animeItem.StartDate);
+
+                if (IsCurrentSeason(animeItem.StartDate))
+                {
+                    tempList[i].IsCurrentSeason = true;
+                    var data = tempList[i];
+
+                    tempList.RemoveAt(i);
+                    tempList.Insert(0, data);
+                }
+            }
+
+            foreach (var item in tempList)
+            {
+                Anime.Add(item);
+                await Task.Delay(10); // 逐个添加时稍微延迟，增加加载动画效果
             }
         }
 
