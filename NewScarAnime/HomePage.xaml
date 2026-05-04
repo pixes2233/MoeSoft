@@ -184,6 +184,24 @@
                                             </BeginStoryboard>
                                         </EventTrigger>
 
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0" To="1"
+                             Duration="0:0:0.2"/>
+
+                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                             From="0.95" To="1"
+                             Duration="0:0:0.2"/>
+
+                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                             From="0.95" To="1"
+                             Duration="0:0:0.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+
                                     </Style.Triggers>
                                 </Style>
                             </ui:CardAction.Style>

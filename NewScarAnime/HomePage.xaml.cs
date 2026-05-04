@@ -182,7 +182,7 @@ namespace NewScarAnime
             foreach (var item in tempList)
             {
                 Anime.Add(item);
-                await Task.Delay(10); // 逐个添加时稍微延迟，增加加载动画效果
+                await Task.Delay(25); // 逐个添加时稍微延迟，增加加载动画效果
             }
         }
 
