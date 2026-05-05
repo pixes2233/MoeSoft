@@ -235,19 +235,20 @@
 
     <Grid>
         <!-- ================= 标题栏 ================= -->
-        <Grid Height="36"
+        <Grid Height="38"
       VerticalAlignment="Top"
       Background="Transparent"
-      MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+      MouseLeftButtonDown="TitleBar_MouseLeftButtonDown"
+      SnapsToDevicePixels="True">
 
             <!-- 背景层 -->
-            <Border Background="#AA0E0F11"
+            <Border CornerRadius="0,0,10,10"
+            Background="#CC111318"
             BorderBrush="#22FFFFFF"
             BorderThickness="0,0,0,1"
             IsHitTestVisible="False">
-
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="12"
+                    <DropShadowEffect BlurRadius="18"
                               ShadowDepth="0"
                               Color="#22000000"/>
                 </Border.Effect>
@@ -262,8 +263,9 @@
                 <Border Width="22"
                 Height="22"
                 CornerRadius="6"
-                Background="Transparent">
-
+                Background="#22FFFFFF"
+                BorderBrush="#33FFFFFF"
+                BorderThickness="1">
                     <Image Source="/Icon/icon.png"
                    Stretch="Uniform"/>
                 </Border>
@@ -279,49 +281,125 @@
             <!-- 右侧：窗口控制按钮 -->
             <StackPanel Orientation="Horizontal"
                 HorizontalAlignment="Right"
-                Margin="0,0,4,0"
+                Margin="0,0,6,0"
                 VerticalAlignment="Center">
 
-                <!-- 最小化 -->
                 <Button Click="Minimize_Click"
-                Width="32"
-                Height="32"
+                Width="34"
+                Height="28"
                 Background="Transparent"
                 BorderThickness="0"
-                Cursor="Hand">
-                    <TextBlock Text="—"
-                       FontSize="14"
-                       Foreground="#FFCCCCCC"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                Cursor="Hand"
+                FocusVisualStyle="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Bd"
+                                        Background="Transparent"
+                                        CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#1FFFFFFF"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock FontFamily="Segoe MDL2 Assets"
+           Text="&#xE921;"
+           FontSize="10"
+           Foreground="#FFCCCCCC"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
                 </Button>
 
-                <!-- 最大化 -->
                 <Button Click="Maximize_Click"
-                Width="32"
-                Height="32"
+                Width="34"
+                Height="28"
                 Background="Transparent"
                 BorderThickness="0"
-                Cursor="Hand">
-                    <TextBlock Text="□"
-                       FontSize="12"
-                       Foreground="#FFCCCCCC"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                Cursor="Hand"
+                FocusVisualStyle="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Bd"
+                                        Background="Transparent"
+                                        CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#1FFFFFFF"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock x:Name="MaxIcon"
+           FontFamily="Segoe MDL2 Assets"
+           Text="&#xE922;"
+           FontSize="10"
+           Foreground="#FFCCCCCC"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
                 </Button>
 
-                <!-- 关闭 -->
                 <Button Click="Close_Click"
-                Width="32"
-                Height="32"
+                Width="34"
+                Height="28"
                 Background="Transparent"
                 BorderThickness="0"
-                Cursor="Hand">
-                    <TextBlock Text="✕"
-                       FontSize="13"
-                       Foreground="#FFDD5555"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                Cursor="Hand"
+                FocusVisualStyle="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Bd"
+                                        Background="Transparent"
+                                        CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#FFE04848"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#FFB93A3A"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock FontFamily="Segoe MDL2 Assets"
+           Text="&#xE8BB;"
+           FontSize="10"
+           Foreground="White"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
                 </Button>
             </StackPanel>
         </Grid>

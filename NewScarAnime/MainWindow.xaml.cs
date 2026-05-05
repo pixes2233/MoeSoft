@@ -49,10 +49,16 @@ namespace NewScarAnime
 
         private void Maximize_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Normal)
-                this.WindowState = WindowState.Maximized;
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+                MaxIcon.Text = "\uE922"; // 最大化
+            }
             else
-                this.WindowState = WindowState.Normal;
+            {
+                WindowState = WindowState.Maximized;
+                MaxIcon.Text = "\uE923"; // 还原
+            }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
