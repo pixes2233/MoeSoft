@@ -26,17 +26,41 @@
             </Grid.ColumnDefinitions>
 
             <ui:Button Grid.Column="1"
-                       Width="50"
-                       Height="50"
-                       Background="Transparent"
-                       BorderBrush="Transparent"
-                       BorderThickness="0"
-                       FocusVisualStyle="{x:Null}"
-                       Focusable="False"
-                       IsTabStop="False"
-                       Click="UpdateAnimeInfo"
-                       HorizontalAlignment="Right">
-                <ui:SymbolIcon Symbol="ArrowClockwise28" FontSize="25"/>
+           Width="32"
+           Height="32"
+           Background="Transparent"
+           BorderThickness="0"
+           CornerRadius="10"
+           FocusVisualStyle="{x:Null}"
+           Focusable="False"
+           IsTabStop="False"
+           Click="UpdateAnimeInfo"
+           HorizontalAlignment="Right"
+           VerticalAlignment="Center"
+           Margin="0,0,8,0">
+
+                <ui:Button.Style>
+                    <Style TargetType="ui:Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+
+                            <!-- Hover：轻微浮起感 -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#14FFFFFF"/>
+                            </Trigger>
+
+                            <!-- Press：更实一点 -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#22FFFFFF"/>
+                            </Trigger>
+
+                        </Style.Triggers>
+                    </Style>
+                </ui:Button.Style>
+
+                <ui:SymbolIcon Symbol="ArrowClockwise28"
+                   FontSize="16"
+                   Foreground="#E6F3F4F6"/>
             </ui:Button>
 
             <ProgressBar x:Name="ProgressBar" Grid.Column="1" IsIndeterminate="True" Visibility="Hidden" VerticalAlignment="Center"/>

@@ -36,6 +36,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <ui:Button
@@ -55,7 +56,12 @@
                 </ui:Button.Icon>
             </ui:Button>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,10,0" Visibility="Visible">
+                <ui:TextBlock x:Name="AutoLoadText" Text="正在自动获取 Bangumi 数据..." Foreground="#FFB8C0CC" FontSize="12.5" FontWeight="Normal" VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.9"/>
+                <ui:ProgressRing x:Name="AutoProgress" IsIndeterminate="True" Visibility="Visible" Width="16" Height="16" Foreground="#FFB8C0CC"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
                 <ui:DropDownButton
     Content="更多操作"
     Appearance="Secondary"

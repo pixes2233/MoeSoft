@@ -38,11 +38,6 @@ namespace NewScarAnime
         private string _bangumiURL;
         private string _animeTitle;
 
-        public AnimeInfoPage()
-        {
-            InitializeComponent();
-        }
-
         private static string GetLocalAddress()
         {
             // 获取本地应用程序数据文件夹路径
@@ -126,6 +121,10 @@ namespace NewScarAnime
 
             // 在这里，你可以使用 _bangumiId 来加载和显示数据
             LoadAnimeData(_bangumiId);
+
+            // 构造函数不能是 async，因此不能在此处使用 await。
+            // 启动后台异步刷新但不阻塞构造函数/UI 线程。
+            _ = AutoRefreshAnimeData();
         }
 
         private void LoadAnimeData(string id)
@@ -201,23 +200,15 @@ namespace NewScarAnime
                 List<string> fileList = GetFileListForAnime(id);
                 var viewModel = new AnimeInfoViewModel();
                 viewModel.AnimeDetails = animeData;
+                string lastWatchFile = GetLastWatchFile(id) ?? string.Empty;
                 foreach (var file in fileList)
                 {
                     var fileVideoName = System.IO.Path.GetFileName(file); // 单个文件名
-                    if (fileVideoName == GetLastWatchFile(id))
-                    {
-                        viewModel.FileNames.Add(fileVideoName);
-                        viewModel.FilePaths.Add(file);
-                        viewModel.LastWatchStatus.Add(true);
-                        viewModel.Files.Add(new FileItem { Name = fileVideoName, Path = file, LastWatchStatus = true });
-                    }
-                    else
-                    {
-                        viewModel.FileNames.Add(fileVideoName);
-                        viewModel.FilePaths.Add(file);
-                        viewModel.LastWatchStatus.Add(false);
-                        viewModel.Files.Add(new FileItem { Name = fileVideoName, Path = file, LastWatchStatus = false });
-                    }
+                    bool isLast = fileVideoName == lastWatchFile;
+                    viewModel.FileNames.Add(fileVideoName);
+                    viewModel.FilePaths.Add(file);
+                    viewModel.LastWatchStatus.Add(isLast);
+                    viewModel.Files.Add(new FileItem { Name = fileVideoName, Path = file, LastWatchStatus = true });
                 }
                 this.DataContext = viewModel;
             }
@@ -288,11 +279,6 @@ namespace NewScarAnime
                     string jsonData = File.ReadAllText(filePath);
                     AnimeLocalLink deserializedUser = JsonConvert.DeserializeObject<AnimeLocalLink>(jsonData);
                     lastWatchFile = deserializedUser.LastWatchFile;
-                }
-                else
-                {
-                    // 如果文件不存在，显示提示信息
-                    System.Windows.MessageBox.Show("未找到保存的 JSON 数据。", "加载信息");
                 }
             }
             catch (Exception ex)
@@ -436,6 +422,22 @@ namespace NewScarAnime
 
             LoadAnimeData(_bangumiId);
             MainWindow.GlobalSnackbarService.Show("System:", "番剧数据已刷新", ControlAppearance.Info, TimeSpan.FromSeconds(3));
+        }
+
+        private async Task AutoRefreshAnimeData()
+        {
+            /// <summary>
+            /// Auto刷新アニメ信息
+            /// </summary>
+
+            string animeJson = LoadJsonOutput(_bangumiId + ".json");
+            AnimeInfo deserializedUser = JsonConvert.DeserializeObject<AnimeInfo>(animeJson);
+
+            await RunBangumiScraper(deserializedUser.bangumi_url);
+
+            LoadAnimeData(_bangumiId);
+            AutoProgress.Visibility = Visibility.Collapsed;
+            AutoLoadText.Visibility = Visibility.Collapsed;
         }
 
         private void OpenBangumiURL(object sender, RoutedEventArgs e)

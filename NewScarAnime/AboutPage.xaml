@@ -86,7 +86,7 @@
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Current Version" Style="{StaticResource SectionTitle}"/>
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock Text="v1.5.2" 
+                                <TextBlock Text="v1.5.5" 
                                            FontSize="24" FontWeight="Light" 
                                            Foreground="{StaticResource PrimaryText}"
                                            VerticalAlignment="Center"/>
