@@ -283,6 +283,6 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 <div align="center">
 
-[返回顶部](#moeSoft---动漫管理助手)
+[返回顶部](#MoeSoft)
 
 </div>
