@@ -74,21 +74,6 @@ dotnet build
 dotnet run --project NewScarAnime/MoeSoft.csproj
 ```
 
-### 目录结构
-```
-MoeSoft/
-├── NewScarAnime/           # 主应用程序
-│   ├── MainWindow.xaml     # 主窗口
-│   ├── HomePage.xaml       # 首页（番剧列表）
-│   ├── BangumiSearch.xaml  # 搜索页面
-│   ├── AnimeInfoPage.xaml  # 详情页面
-│   ├── AboutPage.xaml      # 关于页面
-│   └── Scrap/              # 爬虫程序
-│       ├── BangumiScraper.exe
-│       └── BangumiSearchScrap.exe
-└── Fonts/                  # 字体资源
-```
-
 ---
 
 ## 📸 更多截图 / Screenshots
@@ -119,6 +104,8 @@ MoeSoft/
 MIT License - 详见 [LICENSE](LICENSE) 文件
 
 <div align="center">
+
+---
 
 **Made with ❤️ for Anime Fans**
 
