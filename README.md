@@ -72,6 +72,7 @@ dotnet run --project NewScarAnime/MoeSoft.csproj
 
 ### 通知系统示例
 成功添加:
+
 ![tip](images/tip.png)
 
 ---
