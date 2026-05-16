@@ -89,10 +89,6 @@ dotnet run --project NewScarAnime/MoeSoft.csproj
 
 ---
 
-## 📄 许可证 / License
-
-MIT License - 详见 [LICENSE](LICENSE) 文件
-
 <div align="center">
 
 ---
