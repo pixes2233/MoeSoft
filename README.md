@@ -1,4 +1,4 @@
-# MoeSoft - 动漫管理助手
+# MoeSoft
 
 <div align="center">
 
