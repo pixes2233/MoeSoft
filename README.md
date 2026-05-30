@@ -1,5 +1,7 @@
 # MoeSoft
 
+> ⚠️ **重要提示**：因 bangumi.tv 的访问受限，因此该软件的数据无法进行正常更新
+
 <div align="center">
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue.svg)
