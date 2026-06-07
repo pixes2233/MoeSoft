@@ -247,25 +247,112 @@
                                             </Border.Background>
                                         </Border>
 
-                                        <!-- 标签：改用圆角药丸形状，加入半透明模糊感 -->
-                                        <Border Margin="12" 
-                    Padding="10,4" 
-                    HorizontalAlignment="Left" 
-                    VerticalAlignment="Top"
-                    CornerRadius="12"
-                    Background="#EEFFB7C5"
-                    BorderThickness="1"
-                    BorderBrush="#44FFFFFF"
-                    Visibility="{Binding IsCurrentSeason, Converter={StaticResource BoolToVis}}">
+                                        <Border Margin="12"
+        Padding="10,4"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        CornerRadius="12"
+        BorderThickness="1"
+        BorderBrush="#44FFFFFF">
+
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+
+                                                    <!-- 默认隐藏 -->
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                                                    <!-- 默认颜色（Current） -->
+                                                    <Setter Property="Background" Value="#EEFFB7C5"/>
+
+                                                    <Style.Triggers>
+
+                                                        <!-- 本季度 -->
+                                                        <DataTrigger Binding="{Binding SeasonType}"
+                             Value="Current">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Setter Property="Background" Value="#EEFFB7C5"/>
+                                                        </DataTrigger>
+
+                                                        <!-- 下季度 -->
+                                                        <DataTrigger Binding="{Binding SeasonType}"
+                             Value="Next">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Setter Property="Background" Value="#FFF4D35E"/>
+                                                        </DataTrigger>
+
+                                                        <!-- 上季度 -->
+                                                        <DataTrigger Binding="{Binding SeasonType}"
+                             Value="Previous">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Setter Property="Background" Value="#FFA7C7E7"/>
+                                                        </DataTrigger>
+
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+
                                             <StackPanel Orientation="Horizontal">
-                                                <!-- 可以在这里加一个闪烁的小圆点或图标 -->
-                                                <Ellipse Width="6" Height="6" Fill="#C71585" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                                <TextBlock Text="本季度番剧" 
-                               FontSize="11"
-                               Foreground="#C71585" 
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"/>
+
+                                                <Ellipse Width="6"
+                 Height="6"
+                 Margin="0,0,6,0"
+                 VerticalAlignment="Center">
+
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="Ellipse">
+                                                            <Setter Property="Fill" Value="#C71585"/>
+
+                                                            <Style.Triggers>
+
+                                                                <DataTrigger Binding="{Binding SeasonType}"
+                                     Value="Next">
+                                                                    <Setter Property="Fill" Value="#D4A017"/>
+                                                                </DataTrigger>
+
+                                                                <DataTrigger Binding="{Binding SeasonType}"
+                                     Value="Previous">
+                                                                    <Setter Property="Fill" Value="#4682B4"/>
+                                                                </DataTrigger>
+
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+
+                                                </Ellipse>
+
+                                                <TextBlock FontSize="11"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center">
+
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+
+                                                            <Setter Property="Text" Value="本季度番剧"/>
+                                                            <Setter Property="Foreground" Value="#C71585"/>
+
+                                                            <Style.Triggers>
+
+                                                                <DataTrigger Binding="{Binding SeasonType}"
+                                     Value="Next">
+                                                                    <Setter Property="Text" Value="下季度番剧"/>
+                                                                    <Setter Property="Foreground" Value="#D4A017"/>
+                                                                </DataTrigger>
+
+                                                                <DataTrigger Binding="{Binding SeasonType}"
+                                     Value="Previous">
+                                                                    <Setter Property="Text" Value="上季度番剧"/>
+                                                                    <Setter Property="Foreground" Value="#4682B4"/>
+                                                                </DataTrigger>
+
+                                                            </Style.Triggers>
+
+                                                        </Style>
+                                                    </TextBlock.Style>
+
+                                                </TextBlock>
+
                                             </StackPanel>
+
                                         </Border>
                                     </Grid>
                                 </Border>

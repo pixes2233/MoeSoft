@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -26,6 +27,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.Devices.Sensors;
 using Wpf.Ui.Controls;
 using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -74,7 +76,15 @@ namespace NewScarAnime
             public DateOnly StartDate { get; set; } // 动漫首播日期
             public ImageSource AnimeCover { get; set; } // 动漫封面图片的 URL
             public string BangumiID { get; set; } // Bangumi ID
-            public bool IsCurrentSeason { get; set; }
+            public SeasonType SeasonType { get; set; }
+        }
+
+        public enum SeasonType
+        {
+            Previous,
+            Current,
+            Next,
+            Other
         }
 
         private static string GetLocalAddress()
@@ -179,28 +189,45 @@ namespace NewScarAnime
                         StartDate = startDate,
                         AnimeCover = bitmapImage,
                         BangumiID = bangumiId,
-                        IsCurrentSeason = false
+                        SeasonType = SeasonType.Other
                     });
                 }
                 return tempList;
             });
 
-            // 本季度番剧显示逻辑
+            //// 本季度番剧显示逻辑
+            //for (int i = 0; i < tempList.Count; i++)
+            //{
+            //    DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            //    var animeItem = tempList[i];
+            //    var season = GetAnimeSeason(animeItem.StartDate);
+
+            //    if (IsCurrentSeason(animeItem.StartDate))
+            //    {
+            //        tempList[i].IsCurrentSeason = true;
+            //        var data = tempList[i];
+
+            //        tempList.RemoveAt(i);
+            //        tempList.Insert(0, data);
+            //    }
+            //}
+
             for (int i = 0; i < tempList.Count; i++)
             {
-                DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-                var animeItem = tempList[i];
-                var season = GetAnimeSeason(animeItem.StartDate);
+                var seasonType = GetSeasonType(tempList[i].StartDate);
 
-                if (IsCurrentSeason(animeItem.StartDate))
-                {
-                    tempList[i].IsCurrentSeason = true;
-                    var data = tempList[i];
-
-                    tempList.RemoveAt(i);
-                    tempList.Insert(0, data);
-                }
+                tempList[i].SeasonType = seasonType;
             }
+
+            tempList = tempList
+                .OrderBy(x => x.SeasonType switch
+                {
+                    SeasonType.Current => 0,
+                    SeasonType.Next => 1,
+                    SeasonType.Previous => 2,
+                    _ => 3
+                })
+                .ToList();
 
             foreach (var item in tempList)
             {
@@ -209,17 +236,52 @@ namespace NewScarAnime
             }
         }
 
-        public static bool IsCurrentSeason(DateOnly animeDate, int bufferDays = 7)
+        public class SeasonTypeToBackground : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                if (value is SeasonType season)
+                    return season switch
+                    {
+                        SeasonType.Current => new SolidColorBrush(Color.FromRgb(0xFF, 0xB7, 0xC5)),
+                        SeasonType.Next => new SolidColorBrush(Color.FromRgb(0xF5, 0xD7, 0x6E)),
+                        SeasonType.Previous => new SolidColorBrush(Color.FromRgb(0xB7, 0xD3, 0xFF)),
+                        _ => Brushes.Transparent
+                    };
+                return Brushes.Transparent;
+            }
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+        }
+
+        public static SeasonType GetSeasonType(DateOnly animeDate, int bufferDays = 7)
         {
             ///<summary>
-            ///判断是否是本季度番剧
+            ///返回番剧相对于当前日期所属季度的类型
+            ///Previous / Current / Next / Other
             ///</summary>
             var today = DateOnly.FromDateTime(DateTime.Today);
 
             var animeSeason = GetAnimeSeason(animeDate, bufferDays);
             var currentSeason = GetAnimeSeason(today, bufferDays);
 
-            return animeSeason.Year == currentSeason.Year && animeSeason.Quarter == currentSeason.Quarter;
+            var previousSeason = GetShiftedSeason(currentSeason.Year, currentSeason.Quarter, -1);
+            var nextSeason = GetShiftedSeason(currentSeason.Year, currentSeason.Quarter, 1);
+
+            if (IsSameSeason(animeSeason, currentSeason))
+                return SeasonType.Current;
+
+            if (IsSameSeason(animeSeason, previousSeason))
+                return SeasonType.Previous;
+
+            if (IsSameSeason(animeSeason, nextSeason))
+                return SeasonType.Next;
+
+            return SeasonType.Other;
+        }
+
+        private static bool IsSameSeason((int Year, int Quarter) a, (int Year, int Quarter) b)
+        {
+            return a.Year == b.Year && a.Quarter == b.Quarter;
         }
 
         public static (int Year, int Quarter) GetAnimeSeason(DateOnly date, int bufferDays = 7)
@@ -228,23 +290,14 @@ namespace NewScarAnime
             ///判断是否是本季度番剧の主逻辑
             ///</summary>
 
-            // 季度起始月
             int[] quarterStartMonths = { 1, 4, 7, 10 };
 
             for (int i = 0; i < quarterStartMonths.Length; i++)
             {
                 int startMonth = quarterStartMonths[i];
 
-                // 当前季度开始时间
                 var seasonStart = new DateOnly(date.Year, startMonth, 1);
 
-                // 如果是第一季度，需要看上一年的10月
-                if (i == 0)
-                {
-                    seasonStart = new DateOnly(date.Year, 1, 1);
-                }
-
-                // 下一个季度开始时间
                 DateOnly nextSeasonStart;
                 if (i == 3)
                 {
@@ -255,7 +308,6 @@ namespace NewScarAnime
                     nextSeasonStart = new DateOnly(date.Year, quarterStartMonths[i + 1], 1);
                 }
 
-                // 👇 关键：给“下个季度”留提前空间
                 var adjustedNextSeasonStart = nextSeasonStart.AddDays(-bufferDays);
 
                 if (date >= seasonStart && date < adjustedNextSeasonStart)
@@ -263,7 +315,6 @@ namespace NewScarAnime
                     return (date.Year, i + 1);
                 }
 
-                // 👇 提前进入下个季度
                 if (date >= adjustedNextSeasonStart && date < nextSeasonStart)
                 {
                     int nextQuarter = (i + 1) % 4 + 1;
@@ -272,8 +323,29 @@ namespace NewScarAnime
                 }
             }
 
-            // 理论不会走到这里
             return (date.Year, (date.Month - 1) / 3 + 1);
+        }
+
+        private static (int Year, int Quarter) GetShiftedSeason(int year, int quarter, int offset)
+        {
+            ///<summary>
+            ///季度平移工具：-1=上季度，0=本季度，1=下季度
+            ///</summary>
+            int newQuarter = quarter + offset;
+            int newYear = year;
+
+            if (newQuarter <= 0)
+            {
+                newQuarter += 4;
+                newYear -= 1;
+            }
+            else if (newQuarter > 4)
+            {
+                newQuarter -= 4;
+                newYear += 1;
+            }
+
+            return (newYear, newQuarter);
         }
 
         public static List<AnimeInfo> LoadAllAnimeInfo()
