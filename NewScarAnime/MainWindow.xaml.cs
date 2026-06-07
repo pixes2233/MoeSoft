@@ -95,5 +95,40 @@ namespace NewScarAnime
 
             return await dialog.ShowAsync();
         }
+
+        public async Task<string> ShowSpecifyLinkDialogAsync()
+        {
+            var inputBox = new Wpf.Ui.Controls.TextBox()
+            {
+                MinWidth = 260,
+                PlaceholderText = "输入链接🔗"
+            };
+
+            var dialog = new ContentDialog
+            {
+                Title = "请输入你指定的bangumi链接",
+                Content = new StackPanel
+                {
+                    Children =
+                    {
+                        inputBox
+                    }
+                },
+                PrimaryButtonText = "确定",
+                CloseButtonText = "取消",
+
+                // 【关键】使用本窗口内的 ContentPresenter 作为宿主
+                DialogHost = this.RootContentDialogPresenter
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                return inputBox.Text;
+            }
+
+            return null;
+        }
     }
 }

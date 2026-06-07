@@ -85,6 +85,8 @@
                    IsSuggestionListOpen="False"/>
             </Grid>
 
+            <ui:Button Content="添加指定链接" HorizontalAlignment="Center" Margin="0,10,0,0" Click="SpecifyLink"/>
+
             <ui:TextBlock x:Name="SearchResultCount"
           Text="遇到错误惹(￣﹏￣；)"
           FontSize="12"

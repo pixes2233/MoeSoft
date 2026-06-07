@@ -84,7 +84,7 @@ namespace NewScarAnime
                         string output = await outputReadTask; // 等待输出读取完成
                         string error = (await errorReadTask).Trim(); // 等待错误读取完成并 Trim
 
-                        if (!string.IsNullOrWhiteSpace(output) && error=="Done")
+                        if (!string.IsNullOrWhiteSpace(output) && error == "Done")
                         {
                             var results = JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
 
@@ -137,8 +137,6 @@ namespace NewScarAnime
             if (!(sender is Wpf.Ui.Controls.Button btn) || !(btn.DataContext is BangumiSearchResult animeItem))
                 return;
 
-            MainWindow.GlobalSnackbarService.Show("System:", "正在添加，请耐心等待 (●'◡'●)", ControlAppearance.Info, TimeSpan.FromSeconds(3));
-
             AddAnime(animeItem.link);
         }
 
@@ -146,6 +144,7 @@ namespace NewScarAnime
         {
             try
             {
+                MainWindow.GlobalSnackbarService.Show("System:", "正在添加，请耐心等待 (●'◡'●)", ControlAppearance.Info, TimeSpan.FromSeconds(3));
                 await HomePage.RunBangumiScraper(link);
             }
             catch (Exception ex)
@@ -182,6 +181,16 @@ namespace NewScarAnime
             {
                 sender.ItemsSource = null; // 清空内容
                 sender.IsSuggestionListOpen = false; // 关闭弹出的下拉提示
+            }
+        }
+
+        private async void SpecifyLink(object sender, RoutedEventArgs e)
+        {
+            var link = await MainWindow.Instance.ShowSpecifyLinkDialogAsync();
+
+            if (!string.IsNullOrWhiteSpace(link))
+            {
+                AddAnime(link);
             }
         }
     }

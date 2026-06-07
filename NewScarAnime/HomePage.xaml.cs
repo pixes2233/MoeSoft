@@ -108,9 +108,16 @@ namespace NewScarAnime
 
                     DateOnly startDate = new DateOnly(0001, 1, 1);
 
-                    if (info.start_date != "*")
+                    try
                     {
-                        startDate = DateOnly.ParseExact(info.start_date, "yyyy年M月d日", null);
+                        if (info.start_date != "*")
+                        {
+                            startDate = DateOnly.ParseExact(info.start_date, "yyyy年M月d日", null);
+                        }
+                    }
+                    catch
+                    {
+
                     }
 
                     // 构建应用程序专用子文件夹路径
@@ -138,14 +145,30 @@ namespace NewScarAnime
                         catch (Exception ex)
                         {
                             // 处理图像文件可能损坏或不可读的情况
-                            new Wpf.Ui.Controls.MessageBox { Title = "System", Content = $"加载图片失败: {coverPath}\n错误: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                _ = new Wpf.Ui.Controls.MessageBox
+                                {
+                                    Title = "System",
+                                    Content = $"加载图片失败: {coverPath}\n错误: {ex.Message}",
+                                    CloseButtonText = "确定"
+                                }.ShowDialogAsync();
+                            });
                             // （可选）设置一个占位符图像或 null
                             bitmapImage = null;
                         }
                     }
                     else
                     {
-                        new Wpf.Ui.Controls.MessageBox { Title = "查找封面异常", Content = $"封面图片未找到: {coverPath}", CloseButtonText = "确定" }.ShowDialogAsync();
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            _ = new Wpf.Ui.Controls.MessageBox
+                            {
+                                Title = "查找封面异常",
+                                Content = $"封面图片未找到: {coverPath}",
+                                CloseButtonText = "确定"
+                            }.ShowDialogAsync();
+                        });
                         // （可选）设置一个占位符图像或 null
                         bitmapImage = null;
                     }
@@ -258,7 +281,7 @@ namespace NewScarAnime
             /// <summary>
             /// 一次性返回所有的AnimeInfo数据
             /// </summary>
-            
+
             var animeList = new List<AnimeInfo>();
             string folderPath = System.IO.Path.Combine(GetLocalAddress(), "AnimeInfo");
 
@@ -483,7 +506,7 @@ namespace NewScarAnime
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"加载 JSON 数据时出错: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
             }
             return jsonData; // 返回加载到的 JSON 字符串（如果未找到或出错，则返回空字符串）
