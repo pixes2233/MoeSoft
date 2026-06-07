@@ -122,12 +122,34 @@ namespace NewScarAnime
                     {
                         if (info.start_date != "*")
                         {
-                            startDate = DateOnly.ParseExact(info.start_date, "yyyy年M月d日", null);
+                            string dateStr = info.start_date;
+                            DateTime dt;
+
+                            // 1. 完整日期
+                            if (DateTime.TryParseExact(dateStr, "yyyy年M月d日", null, System.Globalization.DateTimeStyles.None, out dt))
+                            {
+                                startDate = DateOnly.FromDateTime(dt);
+                            }
+                            // 2. 年+月，默认天数为1
+                            else if (DateTime.TryParseExact(dateStr, "yyyy年M月", null, System.Globalization.DateTimeStyles.None, out dt))
+                            {
+                                startDate = new DateOnly(dt.Year, dt.Month, 1);
+                            }
+                            // 3. 仅年份，默认月1日
+                            else if (DateTime.TryParseExact(dateStr, "yyyy年", null, System.Globalization.DateTimeStyles.None, out dt))
+                            {
+                                startDate = new DateOnly(dt.Year, 1, 1);
+                            }
+                            else
+                            {
+                                // 解析失败处理
+                                startDate = new DateOnly(1, 1, 1); // 或 DateOnly.MinValue
+                            }
                         }
                     }
                     catch
                     {
-
+                        startDate = new DateOnly(1, 1, 1); // 或 DateOnly.MinValue
                     }
 
                     // 构建应用程序专用子文件夹路径
