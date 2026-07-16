@@ -137,7 +137,7 @@
                                       ShadowDepth="2"/>
                                 </Border.Effect>
                                 <Border.Background>
-                                    <ImageBrush ImageSource="{Binding image}"
+                                    <ImageBrush ImageSource="{Binding CoverImage}"
                                 Stretch="UniformToFill"/>
                                 </Border.Background>
                             </Border>

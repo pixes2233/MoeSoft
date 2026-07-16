@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using MoeSoft.Services;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -41,82 +43,110 @@ namespace NewScarAnime
             public string title { get; set; }
             public string link { get; set; }
             public string image { get; set; }
+            public BitmapImage CoverImage { get; set; }
         }
 
         public async Task RunBangumiSearchScraper(string title)
         {
-            // 指定要启动的exe文件路径
-            var exePath = System.IO.Path.Combine(AppContext.BaseDirectory, "Scrap", "BangumiSearchScrap.exe");
+            PythonService python = new();
 
-            // 要传递给exe的参数
-            string argument = title; // 这是你要作为命令行参数传递的字符串
 
-            // 创建进程启动信息
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            string output =
+                await python.RunPython(
+                    "internet anime.py",
+                    $"--proxy 127.0.0.1:10808 \"{title}\""
+                );
+
+
+            var results =
+                JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
+
+
+
+            ImageService imageService = new();
+
+
+            await imageService.LoadImages(results);
+
+
+
+            foreach (var item in results)
             {
-                FileName = exePath,
-                Arguments = argument, // *** 新增：设置命令行参数 ***
-                RedirectStandardInput = false, // *** 修改：不再需要重定向标准输入 ***
-                RedirectStandardError = true, // *** 新增：重定向标准错误输出 ***
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                StandardOutputEncoding = Encoding.UTF8 // *** 新增：设置标准输出编码为UTF8 ***
-            };
-
-            try
-            {
-                // 启动进程
-                using (Process process = new Process { StartInfo = startInfo })
-                {
-                    process.Start();
-
-                    // 读取exe文件的输出和错误
-                    using (StreamReader outputReader = process.StandardOutput)
-                    {
-                        // 异步读取输出和错误流，不阻塞当前线程
-                        Task<string> outputReadTask = process.StandardOutput.ReadToEndAsync();
-                        Task<string> errorReadTask = process.StandardError.ReadToEndAsync();
-
-                        // 异步等待进程退出
-                        await Task.Run(() => process.WaitForExit()); // 将 WaitForExit 放到后台线程
-
-                        string output = await outputReadTask; // 等待输出读取完成
-                        string error = (await errorReadTask).Trim(); // 等待错误读取完成并 Trim
-
-                        if (!string.IsNullOrWhiteSpace(output) && error == "Done")
-                        {
-                            var results = JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
-
-                            foreach (var item in results)
-                            {
-                                if (string.IsNullOrWhiteSpace(item.image))
-                                {
-                                    item.image = "pack://application:,,,/Icon/DontFindImage.png";
-                                }
-
-                                AnimeResult.Add(new BangumiSearchResult
-                                {
-                                    title = item.title,
-                                    link = item.link,
-                                    image = item.image
-                                });
-                            }
-                        }
-                        else
-                        {
-                            SearchResultCount.Visibility = Visibility.Visible;
-                            SearchResultCount.Text = $"遇到错误惹(￣﹏￣；)：\n{error}";
-                        }
-                    }
-
-                    process.WaitForExit(); // 等待进程退出
-                }
+                AnimeResult.Add(item);
             }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"Error: {ex.Message}");
-            }
+
+            //// 指定要启动的exe文件路径
+            //var exePath = System.IO.Path.Combine(AppContext.BaseDirectory, "Scrap", "BangumiSearchScrap.exe");
+
+            //// 要传递给exe的参数
+            //string argument = title; // 这是你要作为命令行参数传递的字符串
+
+            //// 创建进程启动信息
+            //ProcessStartInfo startInfo = new ProcessStartInfo
+            //{
+            //    FileName = exePath,
+            //    Arguments = argument, // *** 新增：设置命令行参数 ***
+            //    RedirectStandardInput = false, // *** 修改：不再需要重定向标准输入 ***
+            //    RedirectStandardError = true, // *** 新增：重定向标准错误输出 ***
+            //    RedirectStandardOutput = true,
+            //    UseShellExecute = false,
+            //    CreateNoWindow = true,
+            //    StandardOutputEncoding = Encoding.UTF8 // *** 新增：设置标准输出编码为UTF8 ***
+            //};
+
+            //try
+            //{
+            //    // 启动进程
+            //    using (Process process = new Process { StartInfo = startInfo })
+            //    {
+            //        process.Start();
+
+            //        // 读取exe文件的输出和错误
+            //        using (StreamReader outputReader = process.StandardOutput)
+            //        {
+            //            // 异步读取输出和错误流，不阻塞当前线程
+            //            Task<string> outputReadTask = process.StandardOutput.ReadToEndAsync();
+            //            Task<string> errorReadTask = process.StandardError.ReadToEndAsync();
+
+            //            // 异步等待进程退出
+            //            await Task.Run(() => process.WaitForExit()); // 将 WaitForExit 放到后台线程
+
+            //            string output = await outputReadTask; // 等待输出读取完成
+            //            string error = (await errorReadTask).Trim(); // 等待错误读取完成并 Trim
+
+            //            if (!string.IsNullOrWhiteSpace(output) && error == "Done")
+            //            {
+            //                var results = JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
+
+            //                foreach (var item in results)
+            //                {
+            //                    if (string.IsNullOrWhiteSpace(item.image))
+            //                    {
+            //                        item.image = "pack://application:,,,/Icon/DontFindImage.png";
+            //                    }
+
+            //                    AnimeResult.Add(new BangumiSearchResult
+            //                    {
+            //                        title = item.title,
+            //                        link = item.link,
+            //                        image = item.image
+            //                    });
+            //                }
+            //            }
+            //            else
+            //            {
+            //                SearchResultCount.Visibility = Visibility.Visible;
+            //                SearchResultCount.Text = $"遇到错误惹(￣﹏￣；)：\n{error}";
+            //            }
+            //        }
+
+            //        process.WaitForExit(); // 等待进程退出
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    System.Windows.MessageBox.Show($"Error: {ex.Message}");
+            //}
         }
 
         private async void AnimeNameSearch(object sender, KeyEventArgs e)
