@@ -20,9 +20,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
-using static NewScarAnime.HomePage;
+using static MoeSoft.HomePage;
 
-namespace NewScarAnime
+namespace MoeSoft
 {
     /// <summary>
     /// BangumiSearch.xaml 的交互逻辑
@@ -50,25 +50,22 @@ namespace NewScarAnime
         {
             PythonService python = new();
 
+            string output;
 
-            string output =
-                await python.RunPython(
-                    "internet anime.py",
-                    $"--proxy 127.0.0.1:10808 \"{title}\""
-                );
+            if (GlobalConfig.IsProxyEnabled == true)
+            {
+                output = await python.RunPython( "internet anime.py", $"--proxy {GlobalConfig.ProxyAddress} \"{title}\"");
+            }
+            else
+            {
+                output = await python.RunPython("internet anime.py", $"\"{title}\"");
+            }
 
-
-            var results =
-                JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
-
-
+            var results = JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);
 
             ImageService imageService = new();
 
-
             await imageService.LoadImages(results);
-
-
 
             foreach (var item in results)
             {

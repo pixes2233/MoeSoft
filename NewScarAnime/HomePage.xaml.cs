@@ -36,7 +36,7 @@ using static System.Net.WebRequestMethods;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
-namespace NewScarAnime
+namespace MoeSoft
 {
     /// <summary>
     /// HomePage.xaml 的交互逻辑
@@ -568,11 +568,15 @@ namespace NewScarAnime
             {
                 PythonService python = new();
 
-                string output =
-                    await python.RunPython(
-                        "anime info.py",
-                        $"--proxy 127.0.0.1:10808 \"{url}\""
-                    );
+                string output;
+                if (GlobalConfig.IsProxyEnabled)
+                {
+                    output = await python.RunPython( "anime info.py", $"--proxy {GlobalConfig.ProxyAddress} \"{url}\"");
+                }
+                else
+                {
+                    output = await python.RunPython("anime info.py", $"\"{url}\"");
+                }
 
                 string fileName =
                     ExtractSubjectId(url);

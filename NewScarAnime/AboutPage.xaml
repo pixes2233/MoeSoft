@@ -1,11 +1,11 @@
-﻿<Page x:Class="NewScarAnime.AboutPage"
+﻿<Page x:Class="MoeSoft.AboutPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
-      xmlns:local="clr-namespace:NewScarAnime"
+      xmlns:local="clr-namespace:MoeSoft"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="AboutPage">
@@ -109,7 +109,7 @@
 
                             <DockPanel LastChildFill="False" Margin="0,0,0,12">
                                 <TextBlock Text="Developer" Style="{StaticResource SectionTitle}" DockPanel.Dock="Top"/>
-                                <TextBlock Text="RADAMU" Style="{StaticResource ContentText}"/>
+                                <TextBlock Text="Pixes" Style="{StaticResource ContentText}"/>
                             </DockPanel>
 
                             <DockPanel LastChildFill="False" Grid.Row="1">

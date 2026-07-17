@@ -19,7 +19,7 @@ using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace NewScarAnime
+namespace MoeSoft
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑

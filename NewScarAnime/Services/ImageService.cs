@@ -2,8 +2,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Windows.Media.Imaging;
-using static NewScarAnime.BangumiSearch;
-using static NewScarAnime.HomePage;
+using static MoeSoft.BangumiSearch;
+using static MoeSoft.HomePage;
 
 
 namespace MoeSoft.Services;
@@ -19,7 +19,7 @@ public class ImageService
         var handler = new HttpClientHandler()
         {
             Proxy = new WebProxy(
-                "socks5://127.0.0.1:10808"
+                GlobalConfig.ProxyAddress
             ),
 
             UseProxy = true

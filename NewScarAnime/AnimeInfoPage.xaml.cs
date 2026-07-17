@@ -25,9 +25,9 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
-using static NewScarAnime.HomePage;
+using static MoeSoft.HomePage;
 
-namespace NewScarAnime
+namespace MoeSoft
 {
     /// <summary>
     /// AnimeInfoPage.xaml 的交互逻辑

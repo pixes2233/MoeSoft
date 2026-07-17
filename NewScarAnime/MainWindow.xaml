@@ -1,9 +1,9 @@
-﻿<ui:FluentWindow x:Class="NewScarAnime.MainWindow"
+﻿<ui:FluentWindow x:Class="MoeSoft.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NewScarAnime"
+        xmlns:local="clr-namespace:MoeSoft"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="MoeSoft" Height="768" Width="1366"
@@ -436,6 +436,17 @@
                            Cursor="Hand">
                         <ui:NavigationViewItem.Icon>
                             <ui:SymbolIcon Symbol="AddSquareMultiple16" FontSize="24"/>
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
+
+                    <ui:NavigationViewItem Tag="Add"
+                        TargetPageType="{x:Type local:Setting}"
+                        Content="设置"
+                        FontSize="12"
+                        Foreground="Black"
+                        Cursor="Hand">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="Settings16" FontSize="24"/>
                         </ui:NavigationViewItem.Icon>
                     </ui:NavigationViewItem>
                 </ui:NavigationView.MenuItems>

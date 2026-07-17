@@ -4,7 +4,7 @@ import re
 import json
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urljoin, urlparse
 
 # 解决 Windows 控制台中文（可选）
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -16,16 +16,28 @@ if len(args) >= 2 and args[0] == '--proxy':
     proxy = args[1]
     args = args[2:]
 
+# Validate proxy: must include protocol prefix (http://, https://, socks4://, socks5://, socks5h://)
+if proxy:
+    if not re.match(r'^(https?|socks[45]h?):\/\/', proxy):
+        sys.exit("错误: --proxy 参数必须包含协议前缀，例如 http://、https://、socks5:// 等")
+
 # Build proxies dict if proxy is set
+# 当 scheme 为 https:// 时，requests 会尝试用 TLS 连接代理，
+# 但大多数本地代理（clash/v2ray）端口不支持 TLS。
+# 自动将 https:// 转为 http:// 与代理通信（CONNECT 隧道方式）。
 proxies = None
 if proxy:
+    request_proxy = proxy
+    parsed = urlparse(proxy)
+    if parsed.scheme == 'https':
+        request_proxy = f"http://{parsed.hostname}:{parsed.port}"
     proxies = {
-        "http": proxy,
-        "https": proxy
+        "http": request_proxy,
+        "https": request_proxy
     }
 
 if len(args) < 1:
-    sys.exit("用法: python search.py 关键词")
+    sys.exit("用法: python \"internet anime.py\" --proxy http://... 关键词")
 
 keyword = args[0]
 keyword_encoded = quote(keyword)
@@ -40,6 +52,8 @@ url = f"https://bangumi.tv/subject_search/{keyword_encoded}?cat=2"
 try:
     resp = requests.get(url, headers=headers, timeout=15, proxies=proxies)
     resp.raise_for_status()
+except requests.exceptions.InvalidSchema:
+    sys.exit("错误: 代理协议不受支持。如果使用了 socks5://，请先安装依赖: pip install requests[socks]")
 except requests.exceptions.RequestException as e:
     sys.exit(str(e))
 

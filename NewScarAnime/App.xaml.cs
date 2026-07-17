@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui;
 
-namespace NewScarAnime
+namespace MoeSoft
 {
     /// <summary>
     /// Interaction logic for App.xaml
