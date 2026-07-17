@@ -1,7 +1,7 @@
 <div align="center">
 
 # MoeSoft
-![icon](images/icon.png)
+<img src="./images/icon.png" width="200">
 
 </div>
 
