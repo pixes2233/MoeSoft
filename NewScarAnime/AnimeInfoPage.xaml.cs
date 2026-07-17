@@ -208,7 +208,7 @@ namespace MoeSoft
                     viewModel.FileNames.Add(fileVideoName);
                     viewModel.FilePaths.Add(file);
                     viewModel.LastWatchStatus.Add(isLast);
-                    viewModel.Files.Add(new FileItem { Name = fileVideoName, Path = file, LastWatchStatus = true });
+                    viewModel.Files.Add(new FileItem { Name = fileVideoName, Path = file, LastWatchStatus = isLast });
                 }
                 this.DataContext = viewModel;
             }
