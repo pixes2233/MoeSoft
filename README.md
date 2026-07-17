@@ -1,4 +1,9 @@
+<div align="center">
+
 # MoeSoft
+![icon](images/icon.png)
+
+</div>
 
 > ⚠️ **重要提示**：因 bangumi.tv 在中国大陆被墙，请用户通过翻墙后使用该软件
 
