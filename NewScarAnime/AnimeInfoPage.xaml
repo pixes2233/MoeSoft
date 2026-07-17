@@ -217,7 +217,7 @@
                                             <ui:CardAction.Template>
                                                 <ControlTemplate TargetType="{x:Type ui:CardAction}">
                                                     <Border x:Name="CardBorder"
-                                                            Background="White"
+                                                            Background="#CCFFFFFF"
                                                             CornerRadius="20"
                                                             Padding="7">
                                                         <ContentPresenter
@@ -244,7 +244,8 @@
                                                     <Setter Property="Foreground" Value="Black"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding LastWatchStatus}" Value="true">
-                                                            <Setter Property="Foreground" Value="LightPink"/>
+                                                            <Setter Property="Foreground" Value="#FFB7C5" />
+                                                            <Setter Property="FontWeight" Value="Bold" />
                                                         </DataTrigger>
                                                         <Trigger Property="IsMouseOver" Value="True">
                                                             <Setter Property="Foreground" Value="White"/>

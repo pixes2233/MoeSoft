@@ -11,5 +11,6 @@ namespace MoeSoft
         public static string ProxyAddress { get; set; } = string.Empty;
 
         public static bool IsProxyEnabled { get; set; } = false;
+        public static string Player { get; set; } = string.Empty;
     }
 }

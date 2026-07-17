@@ -461,18 +461,36 @@ namespace MoeSoft
                 {
                     fileNameOnly = System.IO.Path.GetFileName(file.Path);
 
-                    // 如果你要直接打开文件，可以在这里调用
-                    try
+                    if (GlobalConfig.Player != null)
                     {
-                        Process.Start(new ProcessStartInfo
+                        try
                         {
-                            FileName = file.Path,
-                            UseShellExecute = true
-                        });
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = GlobalConfig.Player,
+                                Arguments = $"\"{file.Path}\"",
+                                UseShellExecute = true
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.MessageBox.Show($"打开文件失败：{ex.Message}");
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        System.Windows.MessageBox.Show($"打开文件失败：{ex.Message}");
+                        try
+                        {
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = file.Path,
+                                UseShellExecute = true
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.MessageBox.Show($"打开文件失败：{ex.Message}");
+                        }
                     }
                 }
             }

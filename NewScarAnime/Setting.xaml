@@ -76,9 +76,11 @@
                     <ui:TextBlock 
                         x:Name="ProxyConnctionStatus"
                         Text="连接状态: 未测试"
+                        FontSize="16"
+                        FontWeight="Bold"
                         Margin="0,0,8,0"
                         VerticalAlignment="Center"
-                        Foreground="Gray"/>
+                        Foreground="#607D8B"/>
 
                     <ui:TextBox 
                         x:Name="ProxyAddressTextBox"
@@ -101,6 +103,40 @@
 
             </ui:CardControl>
 
+            <ui:CardControl Margin="0,0,0,4" Padding="16,12">
+                <ui:CardControl.Icon>
+                    <ui:SymbolIcon Symbol="Globe24" FontSize="24" />
+                </ui:CardControl.Icon>
+
+                <ui:CardControl.Header>
+                    <StackPanel VerticalAlignment="Center" Margin="8,0,16,0">
+                        <TextBlock
+                Text="播放方式"
+                FontSize="16"
+                FontWeight="Medium" />
+
+                        <TextBlock
+                Text="选择你的播放器"
+                FontSize="12"
+                Opacity="0.6"
+                Margin="0,4,0,0" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+
+                <StackPanel Orientation="Horizontal" 
+            VerticalAlignment="Center" >
+
+                    <ui:TextBlock 
+                    x:Name="PlayerName"
+        Text=""
+        FontSize="16"
+        Margin="0,0,8,0"
+        VerticalAlignment="Center"
+        Foreground="#FFFFFF"/>
+
+                    <ui:Button x:Name="PlayerSelectButton" VerticalAlignment="Center" Content="选择播放器" Click="PlayerSelectButton_Click"/>
+                </StackPanel>
+            </ui:CardControl>
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -35,6 +37,61 @@ namespace MoeSoft
             GlobalSnackbarService = new SnackbarService();
             GlobalSnackbarService.SetSnackbarPresenter(RootSnackbar);
             Instance = this;
+
+            Start();
+        }
+
+        private void Start()
+        {
+            // 获取 User 文件夹路径
+            string appSpecificFolder = System.IO.Path.Combine(GetLocalAddress(), "User");
+
+            // 如果 User 文件夹不存在，则创建
+            if (!Directory.Exists(appSpecificFolder))
+            {
+                Directory.CreateDirectory(appSpecificFolder);
+            }
+
+            // setting.json完整路径
+            string filePath = System.IO.Path.Combine(appSpecificFolder, "setting.json");
+
+            // 如果 setting.json不存在，则创建默认配置
+            if (!File.Exists(filePath))
+            {
+                JObject defaultSetting = new JObject
+                {
+                    ["IsProxyEnabled"] = false,
+                    ["ProxyAddress"] = "",
+                    ["Player"] = "Default"
+                };
+
+                File.WriteAllText(
+                    filePath,
+                    defaultSetting.ToString()
+                );
+            }
+
+            // 读取 JSON
+            string json = File.ReadAllText(filePath);
+
+            // 转换 JObject
+            JObject obj = JObject.Parse(json);
+
+            // 读取设置
+            GlobalConfig.IsProxyEnabled = (bool?)obj["IsProxyEnabled"] ?? false;
+            GlobalConfig.ProxyAddress = (string?)obj["ProxyAddress"] ?? "";
+            GlobalConfig.Player = (string?)obj["Player"] ?? "Default";
+        }
+
+        private static string GetLocalAddress()
+        {
+            // 获取本地应用程序数据文件夹路径
+            string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            // 构建应用程序专用子文件夹路径
+            string appSpecificFolder = System.IO.Path.Combine(appDataFolder, "ScarAnime");
+
+            return appSpecificFolder;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
