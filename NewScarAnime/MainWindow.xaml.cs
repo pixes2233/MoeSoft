@@ -33,7 +33,7 @@ namespace MoeSoft
         public MainWindow()
         {
             InitializeComponent();
-            ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Acrylic, true);
+            // 主题在 App.OnStartup 中统一设置，避免在窗口构造时重复读取/应用系统主题色
             GlobalSnackbarService = new SnackbarService();
             GlobalSnackbarService.SetSnackbarPresenter(RootSnackbar);
             Instance = this;

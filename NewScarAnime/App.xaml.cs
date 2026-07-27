@@ -3,6 +3,8 @@ using System.Data;
 using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 
 namespace MoeSoft
 {
@@ -15,10 +17,13 @@ namespace MoeSoft
         {
             base.OnStartup(e);
 
-            // 可选：启动时设置（保留你在 XAML 中的默认颜色）
-            SetAccentColors(Color.FromRgb(0x00, 0x7A, 0xCC),
-                            Color.FromRgb(0x1E, 0x90, 0xFF),
-                            Color.FromRgb(0x46, 0x82, 0xB4));
+            // 固定使用暗色主题并禁止跟随系统主题（第三个参数 false）
+            ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Acrylic, false);
+
+            // 粉色主题色
+            SetAccentColors(Color.FromRgb(0xFF, 0x69, 0xB4),
+                            Color.FromRgb(0xFF, 0xB6, 0xC1),
+                            Color.FromRgb(0xFF, 0xC0, 0xCB));
         }
 
         /// <summary>

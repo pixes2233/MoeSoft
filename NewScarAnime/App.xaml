@@ -8,15 +8,17 @@
         <ResourceDictionary>
             <!-- 1. 外部资源合并 (WPF UI 主题) 必须放在最前面 -->
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Light" />
+                <!-- 使用固定深色主题，避免跟随系统主题 -->
+                <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- 2. 自定义资源 (覆盖默认颜色) 必须放在 MergedDictionaries 之后 -->
             <!-- 这样你的设置才能覆盖 WPF UI 的默认设置 -->
-            <SolidColorBrush x:Key="WPFUI.Theme.Accent.Primary" Color="#007ACC" />
-            <SolidColorBrush x:Key="WPFUI.Theme.Accent.Secondary" Color="#1E90FF" />
-            <SolidColorBrush x:Key="WPFUI.Theme.Accent.Tertiary" Color="#4682B4" />
+            <!-- 粉色主题色 -->
+            <SolidColorBrush x:Key="WPFUI.Theme.Accent.Primary" Color="#FF69B4" />
+            <SolidColorBrush x:Key="WPFUI.Theme.Accent.Secondary" Color="#FFB6C1" />
+            <SolidColorBrush x:Key="WPFUI.Theme.Accent.Tertiary" Color="#FFC0CB" />
 
             <!-- 3. 全局样式设置 -->
             <Style TargetType="Control">

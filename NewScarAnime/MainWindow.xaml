@@ -123,6 +123,16 @@
             </Setter>
         </Style>
 
+        <!-- 导航项颜色：未选中为浅灰，选中时使用主题强调色 -->
+        <Style TargetType="ui:NavigationViewItem">
+            <Setter Property="Foreground" Value="#B0FFFFFF"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource WPFUI.Theme.Accent.Primary}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <!-- ================= 终极美化版 Snackbar ================= -->
         <Style TargetType="{x:Type ui:Snackbar}">
             <!-- 1. 基础属性设置 -->
@@ -421,7 +431,6 @@
                            TargetPageType="{x:Type local:HomePage}"
                            Content="番剧"
                            FontSize="12"
-                           Foreground="Black"
                            Cursor="Hand">
                         <ui:NavigationViewItem.Icon>
                             <ui:SymbolIcon Symbol="Home16" FontSize="24"/>
@@ -432,7 +441,6 @@
                            TargetPageType="{x:Type local:BangumiSearch}"
                            Content="添加番剧"
                            FontSize="12"
-                           Foreground="Black"
                            Cursor="Hand">
                         <ui:NavigationViewItem.Icon>
                             <ui:SymbolIcon Symbol="AddSquareMultiple16" FontSize="24"/>
@@ -443,7 +451,6 @@
                         TargetPageType="{x:Type local:Setting}"
                         Content="设置"
                         FontSize="12"
-                        Foreground="Black"
                         Cursor="Hand">
                         <ui:NavigationViewItem.Icon>
                             <ui:SymbolIcon Symbol="Settings16" FontSize="24"/>

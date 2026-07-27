@@ -110,6 +110,8 @@
                                         </Setter.Value>
                                     </Setter>
 
+                                    <Setter Property="BorderBrush" Value="#00000000"/>
+
                                     <Style.Triggers>
                                         <!-- 1. 鼠标悬停 (MouseEnter): 丝滑放大 -->
                                         <EventTrigger RoutedEvent="MouseEnter">
