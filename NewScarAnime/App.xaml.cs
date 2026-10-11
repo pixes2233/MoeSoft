@@ -18,6 +18,7 @@ namespace MoeSoft
             base.OnStartup(e);
 
             // 固定使用暗色主题并禁止跟随系统主题（第三个参数 false）
+            // WPF-UI 4.3.0 中，第三个参数 false 表示禁用系统主题同步
             ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Acrylic, false);
 
             // 粉色主题色

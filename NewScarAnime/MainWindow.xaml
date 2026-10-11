@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoeSoft"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="MoeSoft" Height="768" Width="1366"
         ExtendsContentIntoTitleBar="True"
@@ -123,15 +124,49 @@
             </Setter>
         </Style>
 
-        <!-- 导航项颜色：未选中为浅灰，选中时使用主题强调色 -->
-        <Style TargetType="ui:NavigationViewItem">
-            <Setter Property="Foreground" Value="#B0FFFFFF"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource WPFUI.Theme.Accent.Primary}"/>
-                </DataTrigger>
-            </Style.Triggers>
+        <!-- 导航项：选中时背景为粉色，否则为白色 -->
+        <Style TargetType="{x:Type ui:NavigationViewItem}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ui:NavigationViewItem}">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
+                            <Grid VerticalAlignment="Center" Margin="4,2">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ContentPresenter x:Name="IconPresenter"
+                                                      ContentSource="Icon"
+                                                      VerticalAlignment="Center"
+                                                      Margin="4,0"/>
+                                    <ContentPresenter x:Name="ContentPresenter"
+                                                      ContentSource="Content"
+                                                      VerticalAlignment="Center"
+                                                      Margin="8,0"
+                                                      RecognizesAccessKey="True"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="primitives:Selector.IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#FFFFC0CB"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#FFFDE8EE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+
 
         <!-- ================= 终极美化版 Snackbar ================= -->
         <Style TargetType="{x:Type ui:Snackbar}">

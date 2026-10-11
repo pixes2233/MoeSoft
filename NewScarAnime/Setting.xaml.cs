@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using MoeSoft.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -186,18 +187,7 @@ namespace MoeSoft
         {
             try
             {
-                // 创建代理对象
-                var webProxy = new WebProxy(proxyUrl)
-                {
-                    BypassProxyOnLocal = false
-                };
-
-                // 将代理交给 HttpClient 的处理器
-                var handler = new HttpClientHandler
-                {
-                    Proxy = webProxy,
-                    UseProxy = true,
-                };
+                var handler = ProxyHandlerFactory.CreateHandler(true, proxyUrl);
 
                 // 创建 HttpClient
                 using (var client = new HttpClient(handler))

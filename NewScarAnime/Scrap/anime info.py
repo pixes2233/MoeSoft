@@ -52,7 +52,7 @@ def fetch_with_auto_fallback(url, headers, timeout, proxy=None):
     parsed = urllib.parse.urlparse(proxy)
     request_proxy = proxy
     if parsed.scheme == 'https':
-        request_proxy = f"http://{parsed.hostname}:{parsed.port}"
+        request_proxy = parsed._replace(scheme='http').geturl()
 
     proxies = build_proxies(request_proxy)
 

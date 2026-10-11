@@ -30,7 +30,7 @@ if proxy:
     request_proxy = proxy
     parsed = urlparse(proxy)
     if parsed.scheme == 'https':
-        request_proxy = f"http://{parsed.hostname}:{parsed.port}"
+        request_proxy = parsed._replace(scheme='http').geturl()
     proxies = {
         "http": request_proxy,
         "https": request_proxy

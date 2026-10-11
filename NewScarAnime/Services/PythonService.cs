@@ -19,7 +19,7 @@ public class PythonService
 
     public async Task<string> RunPython(
         string script,
-        string argument)
+        params string[] arguments)
     {
 
         string pythonPath =
@@ -43,9 +43,6 @@ public class PythonService
         {
             FileName = pythonPath,
 
-            Arguments =
-                $"\"{scriptPath}\" {argument}",
-
             RedirectStandardOutput = true,
 
             RedirectStandardError = true,
@@ -57,6 +54,12 @@ public class PythonService
             StandardOutputEncoding =
                 Encoding.UTF8
         };
+
+        psi.ArgumentList.Add(scriptPath);
+        foreach (string argument in arguments)
+        {
+            psi.ArgumentList.Add(argument);
+        }
 
 
         using Process process = new();

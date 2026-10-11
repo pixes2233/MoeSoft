@@ -16,16 +16,10 @@ public class ImageService
 
     public ImageService()
     {
-        var handler = new HttpClientHandler()
-        {
-            Proxy = new WebProxy(
-                GlobalConfig.ProxyAddress
-            ),
-
-            UseProxy = true
-        };
-
-
+        var handler = ProxyHandlerFactory.CreateHandler(
+            GlobalConfig.IsProxyEnabled,
+            GlobalConfig.ProxyAddress
+        );
         client = new HttpClient(handler);
     }
 

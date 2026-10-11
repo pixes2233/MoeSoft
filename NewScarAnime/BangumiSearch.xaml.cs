@@ -54,11 +54,11 @@ namespace MoeSoft
 
             if (GlobalConfig.IsProxyEnabled == true)
             {
-                output = await python.RunPython( "internet anime.py", $"--proxy {GlobalConfig.ProxyAddress} \"{title}\"");
+                output = await python.RunPython("internet anime.py", "--proxy", GlobalConfig.ProxyAddress, title);
             }
             else
             {
-                output = await python.RunPython("internet anime.py", $"\"{title}\"");
+                output = await python.RunPython("internet anime.py", title);
             }
 
             var results = JsonConvert.DeserializeObject<List<BangumiSearchResult>>(output);

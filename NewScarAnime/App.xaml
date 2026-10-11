@@ -32,6 +32,12 @@
             <Style TargetType="ui:TextBlock">
                 <Setter Property="FontFamily" Value="/ScarAnime;component/Fonts/NotoSans-VariableFont_wdth,wght.ttf#Noto Sans SC"/>
             </Style>
+
+            <!-- NavigationViewItem 状态动画会沿 BorderBrush.Color 访问画刷，确保其始终为 SolidColorBrush。 -->
+            <Style TargetType="ui:NavigationViewItem"
+                   BasedOn="{StaticResource {x:Type ui:NavigationViewItem}}">
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

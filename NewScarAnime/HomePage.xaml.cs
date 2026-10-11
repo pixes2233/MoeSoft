@@ -431,21 +431,11 @@ namespace MoeSoft
                 Directory.CreateDirectory(appSpecificFolder);
             }
 
-            // 创建代理
-            var proxy =
-                new WebProxy(
-                    "http://127.0.0.1:10808"
-                );
-
-            // 创建HttpClientHandler
-            var handler =
-                new HttpClientHandler
-                {
-                    Proxy = proxy,
-                    UseProxy = true
-                };
-
-            using (HttpClient client = new(handler))
+            using (HttpClient client = new(
+                ProxyHandlerFactory.CreateHandler(
+                    GlobalConfig.IsProxyEnabled,
+                    GlobalConfig.ProxyAddress
+                )))
             {
                 try
                 {
@@ -571,11 +561,11 @@ namespace MoeSoft
                 string output;
                 if (GlobalConfig.IsProxyEnabled)
                 {
-                    output = await python.RunPython( "anime info.py", $"--proxy {GlobalConfig.ProxyAddress} \"{url}\"");
+                    output = await python.RunPython("anime info.py", "--proxy", GlobalConfig.ProxyAddress, url);
                 }
                 else
                 {
-                    output = await python.RunPython("anime info.py", $"\"{url}\"");
+                    output = await python.RunPython("anime info.py", url);
                 }
 
                 string fileName =
