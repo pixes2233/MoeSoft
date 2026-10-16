@@ -20,50 +20,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <ui:Button Grid.Column="1"
-           Width="32"
-           Height="32"
-           Background="Transparent"
-           BorderThickness="0"
-           CornerRadius="10"
-           FocusVisualStyle="{x:Null}"
-           Focusable="False"
-           IsTabStop="False"
-           Click="UpdateAnimeInfo"
-           HorizontalAlignment="Right"
-           VerticalAlignment="Center"
-           Margin="0,0,8,0">
-
-                <ui:Button.Style>
-                    <Style TargetType="ui:Button">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Style.Triggers>
-
-                            <!-- Hover：轻微浮起感 -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#14FFFFFF"/>
-                            </Trigger>
-
-                            <!-- Press：更实一点 -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#22FFFFFF"/>
-                            </Trigger>
-
-                        </Style.Triggers>
-                    </Style>
-                </ui:Button.Style>
-
-                <ui:SymbolIcon Symbol="ArrowClockwise28"
-                   FontSize="16"
-                   Foreground="#E6F3F4F6"/>
-            </ui:Button>
-
-            <ProgressBar x:Name="ProgressBar" Grid.Column="1" IsIndeterminate="True" Visibility="Hidden" VerticalAlignment="Center"/>
+            <ui:TextBlock Text="番剧列表" FontSize="24" FontWeight="Bold" Margin="20,10,0,10" Foreground="White"/>
         </Grid>
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Anime}">

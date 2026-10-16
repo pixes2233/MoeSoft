@@ -50,7 +50,6 @@ namespace MoeSoft
             InitializeComponent();
             this.DataContext = this;
             Anime = new ObservableCollection<AnimeItem>();
-            ProgressBar.Visibility = _progressBarState;
             Loaded += async (_, __) => await LoadItems();
         }
 
@@ -605,20 +604,6 @@ namespace MoeSoft
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
             e.Handled = true;
-        }
-
-        private async void UpdateAnimeInfo(object sender, RoutedEventArgs e)
-        {
-            ///<summary>
-            ///更新所有AnimeInfo数据
-            /// </summary>
-            PythonService python = new();
-            string json =
-                await python.RunPython(
-                    "search.py",
-                    "初音未来"
-                );
-            MainWindow.GlobalSnackbarService.Show("System:", json, ControlAppearance.Info, TimeSpan.FromSeconds(3));
         }
 
         private void OpenAnimeInfo(object sender, RoutedEventArgs e)
