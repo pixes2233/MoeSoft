@@ -35,29 +35,6 @@ namespace MoeSoft
             ProxyToggle.IsChecked = GlobalConfig.IsProxyEnabled;
             ProxyAddressTextBox.Text = GlobalConfig.ProxyAddress;
             PlayerName.Text = "播放器地址: " + GlobalConfig.Player;
-            //try
-            //{
-            //    // 为你的应用程序创建专用子文件夹
-            //    string appSpecificFolder = System.IO.Path.Combine(GetLocalAddress(), "User");
-
-            //    // 构建完整的文件路径
-            //    // 将应用程序专用文件夹路径与你希望的文件名（默认为 "user_data.json"）结合起来。
-            //    string filePath = System.IO.Path.Combine(appSpecificFolder, "setting" + ".json");
-
-            //    // 读取 JSON 文件
-            //    string json = File.ReadAllText(filePath);
-
-            //    // 转成 JObject
-            //    JObject obj = JObject.Parse(json);
-
-            //    ProxyToggle.IsChecked = (bool)obj["IsProxyEnabled"];
-            //    ProxyAddressTextBox.Text = (string)obj["ProxyAddress"];
-            //}
-            //catch (Exception ex)
-            //{
-            //    // 显示错误消息
-            //    System.Windows.MessageBox.Show($"读取 JSON 数据时出错: {ex.Message}", "读取错误");
-            //}
         }
 
         private static string GetLocalAddress()

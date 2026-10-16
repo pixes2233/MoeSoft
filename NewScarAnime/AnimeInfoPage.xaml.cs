@@ -52,16 +52,10 @@ namespace MoeSoft
         public class AnimeInfoViewModel
         {
             public AnimeDetails AnimeDetails { get; set; }
-            public ObservableCollection<string> FileNames { get; set; }
-            public ObservableCollection<string> FilePaths { get; set; }
-            public ObservableCollection<bool> LastWatchStatus { get; set; }
             public ObservableCollection<FileItem> Files { get; set; }
 
             public AnimeInfoViewModel()
             {
-                FileNames = new ObservableCollection<string>();
-                FilePaths = new ObservableCollection<string>();
-                LastWatchStatus = new ObservableCollection<bool>();
                 Files = new ObservableCollection<FileItem>();
             }
         }
@@ -205,9 +199,6 @@ namespace MoeSoft
                 {
                     var fileVideoName = System.IO.Path.GetFileName(file); // 单个文件名
                     bool isLast = fileVideoName == lastWatchFile;
-                    viewModel.FileNames.Add(fileVideoName);
-                    viewModel.FilePaths.Add(file);
-                    viewModel.LastWatchStatus.Add(isLast);
                     viewModel.Files.Add(new FileItem { Name = fileVideoName, Path = file, LastWatchStatus = isLast });
                 }
                 this.DataContext = viewModel;

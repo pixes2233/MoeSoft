@@ -220,23 +220,6 @@ namespace MoeSoft
                 return tempList;
             });
 
-            //// 本季度番剧显示逻辑
-            //for (int i = 0; i < tempList.Count; i++)
-            //{
-            //    DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-            //    var animeItem = tempList[i];
-            //    var season = GetAnimeSeason(animeItem.StartDate);
-
-            //    if (IsCurrentSeason(animeItem.StartDate))
-            //    {
-            //        tempList[i].IsCurrentSeason = true;
-            //        var data = tempList[i];
-
-            //        tempList.RemoveAt(i);
-            //        tempList.Insert(0, data);
-            //    }
-            //}
-
             for (int i = 0; i < tempList.Count; i++)
             {
                 var seasonType = GetSeasonType(tempList[i].StartDate);
@@ -257,7 +240,6 @@ namespace MoeSoft
             foreach (var item in tempList)
             {
                 Anime.Add(item);
-                await Task.Delay(25); // 逐个添加时稍微延迟，增加加载动画效果
             }
         }
 
@@ -473,36 +455,6 @@ namespace MoeSoft
                 }
             }
 
-            //string appSpecificFolder = System.IO.Path.Combine(GetLocalAddress(), "AnimeCover");
-            //string filePath = System.IO.Path.Combine(appSpecificFolder, fileName);
-
-            //// 检查该子文件夹是否存在，如果不存在则创建它。
-            //if (!Directory.Exists(appSpecificFolder))
-            //{
-            //    Directory.CreateDirectory(appSpecificFolder);
-            //}
-
-            //// 创建 HttpClient 实例
-            //using (HttpClient client = new HttpClient())
-            //{
-            //    try
-            //    {
-            //        // 1. 下载图片内容作为字节数组（同步版本）
-            //        // .Result 会阻塞当前线程，直到 GetByteArrayAsync 完成。
-            //        byte[] imageBytes = await client.GetByteArrayAsync(imageUrl);
-
-            //        // 2. 将字节数组写入本地文件（同步版本）
-            //        await Task.Run(() => System.IO.File.WriteAllBytes(filePath, imageBytes));
-            //    }
-            //    catch (HttpRequestException httpEx)
-            //    {
-            //        new Wpf.Ui.Controls.MessageBox { Title = "网络异常", Content = $"下载失败 (网络/HTTP 错误): {httpEx.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        new Wpf.Ui.Controls.MessageBox { Title = "系统异常", Content = $"保存失败 (未知错误): {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
-            //    }
-            //}
         }
 
         public static string ExtractSubjectId(string url)
@@ -593,64 +545,6 @@ namespace MoeSoft
                 .ShowDialogAsync();
             }
 
-            //// 指定要启动的exe文件路径
-            //var exePath = System.IO.Path.Combine(AppContext.BaseDirectory, "Scrap", "BangumiScraper.exe");
-
-            //// 要传递给exe的参数
-            //string argument = url; // 这是你要作为命令行参数传递的字符串
-
-            //// 创建进程启动信息
-            //ProcessStartInfo startInfo = new ProcessStartInfo
-            //{
-            //    FileName = exePath,
-            //    Arguments = argument, // *** 新增：设置命令行参数 ***
-            //    RedirectStandardInput = false, // *** 修改：不再需要重定向标准输入 ***
-            //    RedirectStandardError = true, // *** 新增：重定向标准错误输出 ***
-            //    RedirectStandardOutput = true,
-            //    UseShellExecute = false,
-            //    CreateNoWindow = true,
-            //    StandardOutputEncoding = Encoding.UTF8 // *** 新增：设置标准输出编码为UTF8 ***
-            //};
-
-            //try
-            //{
-            //    // 启动进程
-            //    using (Process process = new Process { StartInfo = startInfo })
-            //    {
-            //        process.Start();
-
-            //        // 读取exe文件的输出和错误
-            //        using (StreamReader outputReader = process.StandardOutput)
-            //        {
-            //            // 异步读取输出和错误流，不阻塞当前线程
-            //            Task<string> outputReadTask = process.StandardOutput.ReadToEndAsync();
-            //            Task<string> errorReadTask = process.StandardError.ReadToEndAsync();
-
-            //            // 异步等待进程退出
-            //            await Task.Run(() => process.WaitForExit()); // 将 WaitForExit 放到后台线程
-
-            //            string output = await outputReadTask; // 等待输出读取完成
-            //            string error = (await errorReadTask).Trim(); // 等待错误读取完成并 Trim
-
-            //            if (error == "Done")
-            //            {
-            //                string fileName = ExtractSubjectId(argument); // 使用提取的ID作为文件名
-            //                SaveJsonOutput(output, fileName + ".json"); // 保存输出到JSON文件
-            //                await DownloadImageSync(ParseAnimeImageUrl(output), fileName + ".jpg"); // 下载图片并保存
-            //            }
-            //            else
-            //            {
-            //                new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"Exe Error: {error}", CloseButtonText = "确定" }.ShowDialogAsync();
-            //            }
-            //        }
-
-            //        process.WaitForExit(); // 等待进程退出
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    new Wpf.Ui.Controls.MessageBox { Title = "文件异常", Content = $"Error: {ex.Message}", CloseButtonText = "确定" }.ShowDialogAsync();
-            //}
         }
 
         public static void SaveJsonOutput(string jsonData, string fileName)
@@ -718,31 +612,6 @@ namespace MoeSoft
             ///<summary>
             ///更新所有AnimeInfo数据
             /// </summary>
-            //_progressBarState = Visibility.Visible;
-            //ProgressBar.Visibility = _progressBarState;
-            //var infos = LoadAllAnimeInfo();
-            //var tasks = new List<Task>();
-            //using var sem = new SemaphoreSlim(4); // 最多并发4个
-            //foreach (var info in infos)
-            //{
-            //    await sem.WaitAsync();
-            //    tasks.Add(Task.Run(async () =>
-            //    {
-            //        try
-            //        {
-            //            await RunBangumiScraper(info.bangumi_url);
-            //        }
-            //        finally
-            //        {
-            //            sem.Release();
-            //        }
-            //    }));
-            //}
-            //await Task.WhenAll(tasks);
-
-            //_progressBarState = Visibility.Hidden;
-            //ProgressBar.Visibility = _progressBarState;
-
             PythonService python = new();
             string json =
                 await python.RunPython(

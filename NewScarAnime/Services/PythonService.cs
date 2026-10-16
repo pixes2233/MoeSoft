@@ -69,23 +69,22 @@ public class PythonService
         process.Start();
 
 
-        string output =
-            await process.StandardOutput.ReadToEndAsync();
-
-
-        string error =
-            await process.StandardError.ReadToEndAsync();
-
-
+        // 同时读取两个重定向流，避免任一管道写满后阻塞子进程。
+        Task<string> outputTask = process.StandardOutput.ReadToEndAsync();
+        Task<string> errorTask = process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
 
+        await Task.WhenAll(outputTask, errorTask);
 
-        if (!string.IsNullOrEmpty(error))
+        if (process.ExitCode != 0)
         {
-            throw new Exception(error);
+            string error = await errorTask;
+            throw new InvalidOperationException(
+                string.IsNullOrWhiteSpace(error)
+                    ? $"Python 脚本退出，代码：{process.ExitCode}。"
+                    : error);
         }
 
-
-        return output;
+        return await outputTask;
     }
 }
