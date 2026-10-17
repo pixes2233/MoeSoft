@@ -11,34 +11,40 @@
       Title="AboutPage">
 
     <Page.Resources>
-        <!-- 基础色彩 -->
-        <SolidColorBrush x:Key="CardBackground" Color="#0FFFFFFF"/>
-        <!-- 稍微降低不透明度，增强通透感 -->
-        <SolidColorBrush x:Key="CardBorderBrush" Color="#1FFFFFFF"/>
-        <!-- 新增：极细边框颜色 -->
-        <SolidColorBrush x:Key="PrimaryText" Color="#F2F2F2"/>
-        <SolidColorBrush x:Key="SecondaryText" Color="#C6C6C6"/>
-        <SolidColorBrush x:Key="Accent" Color="#FF6AA9FF"/>
-        <SolidColorBrush x:Key="SubtleFill" Color="#08FFFFFF"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#12FFFFFF"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#22FFFFFF"/>
+        <SolidColorBrush x:Key="PrimaryText" Color="#FFF5F7FF"/>
+        <SolidColorBrush x:Key="SecondaryText" Color="#FFB7C0D0"/>
+        <SolidColorBrush x:Key="Accent" Color="#FF8C7CFF"/>
+        <SolidColorBrush x:Key="SubtleFill" Color="#0EFFFFFF"/>
+        <LinearGradientBrush x:Key="AccentGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF9B7BFF" Offset="0"/>
+            <GradientStop Color="#FF5D9DFF" Offset="1"/>
+        </LinearGradientBrush>
 
         <!-- 样式：卡片容器 -->
         <Style x:Key="ModernCard" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource CardBackground}"/>
             <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <!-- 稍微减小圆角，显得更现代硬朗 -->
-            <Setter Property="Padding" Value="24"/>
-            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="26"/>
+            <Setter Property="Margin" Value="0,0,0,18"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="24" ShadowDepth="5" Opacity="0.16"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- 样式：小标题 -->
         <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryText}"/>
-            <Setter Property="Opacity" Value="0.9"/>
-            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Opacity" Value="0.78"/>
+            <Setter Property="Margin" Value="0,0,0,7"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
         </Style>
 
         <!-- 样式：正文内容 -->
@@ -46,6 +52,7 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="{StaticResource SecondaryText}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
         </Style>
     </Page.Resources>
 
@@ -54,22 +61,22 @@
             <StackPanel Width="680" HorizontalAlignment="Center">
 
                 <!-- 1. 品牌头部区域 (居中布局更具现代感) -->
-                <StackPanel Margin="0,40,0,50" HorizontalAlignment="Center">
-                    <Border Width="100" Height="100" CornerRadius="24" Background="{StaticResource SubtleFill}" Margin="0,0,0,24">
+                <StackPanel Margin="0,34,0,42" HorizontalAlignment="Center">
+                    <Border Width="108" Height="108" CornerRadius="28" Background="{StaticResource SubtleFill}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" Margin="0,0,0,22">
                         <Border.Effect>
-                            <DropShadowEffect Color="#000000" BlurRadius="20" ShadowDepth="4" Opacity="0.15"/>
+                            <DropShadowEffect Color="#775D9DFF" BlurRadius="28" ShadowDepth="5" Opacity="0.28"/>
                         </Border.Effect>
                         <Image Source="/Icon/icon.png" Stretch="Uniform" Margin="10"/>
                     </Border>
 
                     <TextBlock Text="MoeSoft" 
-                               FontSize="36" FontWeight="Bold" 
+                               FontSize="38" FontWeight="Bold" FontFamily="Segoe UI Semibold"
                                Foreground="{StaticResource PrimaryText}"
-                               HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                               HorizontalAlignment="Center" Margin="0,0,0,10"/>
 
                     <TextBlock Text="让追番体验回归纯粹与便捷" 
-                               FontSize="16" Foreground="{StaticResource SecondaryText}"
-                               HorizontalAlignment="Center" Opacity="0.8"/>
+                               FontSize="15" Foreground="{StaticResource SecondaryText}"
+                               HorizontalAlignment="Center" Opacity="0.9"/>
                 </StackPanel>
 
                 <!-- 2. 信息概览 (使用网格布局代替列表) -->
@@ -86,19 +93,19 @@
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Current Version" Style="{StaticResource SectionTitle}"/>
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock Text="v1.6.5" 
-                                           FontSize="24" FontWeight="Light" 
+                            <TextBlock Text="v1.6.5" 
+                                           FontSize="28" FontWeight="Light" FontFamily="Segoe UI Light"
                                            Foreground="{StaticResource PrimaryText}"
                                            VerticalAlignment="Center"/>
                                 <!-- 版本标签 Badge -->
-                                <Border Background="{StaticResource Accent}" CornerRadius="4" Padding="8,2" Margin="12,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="BETA" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                <Border Background="{StaticResource AccentGradient}" CornerRadius="6" Padding="9,4" Margin="12,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="BETA" FontSize="10" FontWeight="Bold" Foreground="White"/>
                                 </Border>
                             </StackPanel>
                         </StackPanel>
 
                         <!-- 中间分割线 -->
-                        <Rectangle Grid.Column="1" Width="1" Margin="30,4" Fill="{StaticResource SecondaryText}" Opacity="0.1"/>
+                        <Rectangle Grid.Column="1" Width="1" Margin="26,4" Fill="{StaticResource SecondaryText}" Opacity="0.18"/>
 
                         <!-- 右侧：技术栈 -->
                         <Grid Grid.Column="2">
@@ -121,7 +128,7 @@
                 </Border>
 
                 <!-- 3. 数据来源与链接 -->
-                <Border Style="{StaticResource ModernCard}" Padding="16">
+                <Border Style="{StaticResource ModernCard}" Padding="20,18">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -154,14 +161,14 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <!-- 条目样式：微小的背景块，看起来更整洁 -->
-                                <Border Background="{StaticResource SubtleFill}" CornerRadius="6" Margin="0,0,0,8" Padding="12,8">
+                                        <Border Background="{StaticResource SubtleFill}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="9" Margin="0,0,0,8" Padding="14,10">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding}" Foreground="{StaticResource PrimaryText}" FontSize="13"/>
-                                        <TextBlock Text="MIT / Ms-PL" Grid.Column="1" Foreground="{StaticResource SecondaryText}" FontSize="12" Opacity="0.6"/>
+                                         <TextBlock Text="{Binding}" Foreground="{StaticResource PrimaryText}" FontSize="13" FontFamily="Segoe UI Semibold"/>
+                                         <TextBlock Text="MIT / Ms-PL" Grid.Column="1" Foreground="{StaticResource SecondaryText}" FontSize="11" Opacity="0.72"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
